@@ -1,0 +1,11 @@
+.card {
+  border-left: 5px solid orange;
+}
+
+.positive-percent {
+  color: green;
+}
+
+.negative-percent {
+  color: red;
+}

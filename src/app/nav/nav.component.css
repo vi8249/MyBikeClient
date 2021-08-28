@@ -1,0 +1,18 @@
+.btn-close:first-child {
+  margin-right: auto;
+  visibility: hidden;
+}
+
+.btn-close:last-child {
+  margin-left: auto;
+}
+
+li a
+{
+  color: white;
+}
+
+li a:hover
+{
+  color: orange;
+}

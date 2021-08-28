@@ -1,0 +1,17 @@
+<div class="container">
+  <ng-container *ngIf="!(this.accountService.currentUser$ | async)">
+    <div class="text-center">
+      <h1>Welcome to MyBike</h1>
+      <h6>Please sign in or register first!</h6>
+    </div>
+    <div class="text-center mt-5">
+      <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal"
+        data-bs-target="#loginModal">Login</button>
+      <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+        data-bs-target="#registerModal">Sign-up</button>
+    </div>
+  </ng-container>
+</div>
+<ng-container *ngIf="(this.accountService.currentUser$ | async) && !(this.accountService.currentUser$ | async)?.admin">
+  <app-user></app-user>
+</ng-container>

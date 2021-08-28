@@ -1,0 +1,108 @@
+<header class="p-3 bg-dark text-white">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <div class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <h3 class="me-3 text-white">{{title}}</h3>
+      </div>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <ng-container
+          *ngIf="(this.accountService.currentUser$ | async) && (this.accountService.currentUser$ | async).admin">
+          <li><a href="bikes" class="nav-link px-2">Bikes</a></li>
+          <li><a href="stations" class="nav-link px-2">Stations</a></li>
+          <li><a href="pricing" class="nav-link px-2">Pricing</a></li>
+        </ng-container>
+      </ul>
+
+      <div class="text-end">
+        <ng-container *ngIf="this.accountService.currentUser$ | async">
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDarkDropdownMenuLink" role="button"
+              data-bs-toggle="dropdown">
+              Welcome, {{(this.accountService.currentUser$ | async).email}}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark ms-3 mt-2" aria-labelledby="navbarDarkDropdownMenuLink">
+              <li><a class="dropdown-item" href="https://localhost:5001/swagger/index.html" role="button">API
+                  Document</a></li>
+              <li><a class="dropdown-item" href="#" role="button" (click)="logout()">Logout</a></li>
+            </ul>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form #loginForm="ngForm" class="modal-body p-md-3 border rounded-3 bg-light text-dark" (ngSubmit)="login()"
+            autocomplete="off">
+            <div class="d-flex mb-3">
+              <button type="button" class="btn-close" style="visibility:hidden"></button>
+              <h2 class="modal-title" id="loginModalLabel">Login</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="form-floating mb-3">
+              <input name="email" [(ngModel)]="model.email" type="email" class="form-control" id="loginEmail"
+                placeholder="name@example.com" required>
+              <label for="floatingInput">Email address</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input name="password" [(ngModel)]="model.password" type="password" class="form-control"
+                id="loginPassword" placeholder="Password" required>
+              <label for="floatingPassword">Password</label>
+            </div>
+            <div class="checkbox mb-3">
+              <label>
+                <input type="checkbox" value="remember-me"> Remember me
+              </label>
+            </div>
+            <button class="w-100 btn btn-lg btn-warning" type="submit" data-bs-dismiss="modal">Sign In</button>
+            <hr class="my-4">
+            <small class="text-muted">By clicking Login In, you agree to the terms of use.</small>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form #registerForm="ngForm" class="modal-body p-md-3 border rounded-3 bg-light text-dark"
+            (ngSubmit)="register()" autocomplete="off">
+            <div class="d-flex mb-3">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h2 class="modal-title" id="registerModalLabel">Sign Up</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="form-floating mb-3">
+              <input name="email" [(ngModel)]="model.email" type="email" class="form-control" id="registerEmail"
+                placeholder="name@example.com">
+              <label for="floatingInput">Email address</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input name="password" [(ngModel)]="model.password" type="password" class="form-control"
+                id="registerPassword" placeholder="Password">
+              <label for="floatingPassword">Password</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input name="password" [(ngModel)]="model.confirmPassword" type="password" class="form-control"
+                id="registerCPassword" placeholder="Confirm Password">
+              <label for="floatingCPassword">Confirm Password</label>
+            </div>
+            <div class="checkbox mb-3">
+              <label>
+                <input type="checkbox" value="remember-me"> Remember me
+              </label>
+            </div>
+            <button class="w-100 btn btn-lg btn-warning" type="submit" data-bs-dismiss="modal">Sign Up</button>
+            <hr class="my-4">
+            <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</header>

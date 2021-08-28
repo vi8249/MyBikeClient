@@ -1,1 +1,42 @@
 /* You can add global styles to this file, and also import other style files */
+.pagination > li > a
+{
+    background-color: white;
+    color: rgb(120, 120, 120);
+}
+
+.pagination > li > a:hover
+{
+  background-color: orange;
+  border-color: orange;
+  color:white
+
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: orange !Important;
+    border: solid 1px orange !Important;
+}
+
+.btn-edit:hover
+{
+  background-color: orange !Important;
+  border-color: orange !Important;
+}
+
+.page-link .material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}

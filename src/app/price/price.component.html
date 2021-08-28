@@ -1,0 +1,14 @@
+<div class="row">
+  <ng-container *ngFor="let price of prices">
+
+    <div class="col-md-3">
+      <div class="price-card featured">
+        <h2>{{price.bikeType}}</h2>
+        <p class="price"><span>{{price.cost}}</span>/ 30分</p>
+        <ul class="pricing-offers">
+          <li>{{price.discount}}/ 小於30分</li>
+        </ul>
+      </div>
+    </div>
+  </ng-container>
+</div>
