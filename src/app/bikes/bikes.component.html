@@ -84,7 +84,12 @@
         <td class="">{{bike.bikeType}}</td>
         <td class="">{{bike.mileage}}</td>
         <td class="">{{bike.revenue}}</td>
-        <td class="">{{bike.bikeStation.stationName}}</td>
+        <ng-container *ngIf="bike.bikeStation == null">
+          <td class=""> </td>
+        </ng-container>
+        <ng-container *ngIf="bike.bikeStation != null">
+          <td class="">{{bike.bikeStation.stationName}}</td>
+        </ng-container>
         <td *ngIf="bike.rented" class="">使用中</td>
         <td *ngIf="!bike.rented" class="">閒置中</td>
         <td class="sorting_1">
