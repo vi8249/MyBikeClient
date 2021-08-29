@@ -109,8 +109,8 @@
                 <td class="">{{route.bikeId}}</td>
                 <td class="">{{route.sourceName}}</td>
                 <td class="">{{route.destinationName}}</td>
-                <td class="">{{route.borrowTime | date:'short'}}</td>
-                <td class="">{{route.returnTime | date:'short'}}</td>
+                <td class="">{{route.borrowTime | date:'short':'+1600'}}</td>
+                <td class="">{{route.returnTime | date:'short':'+1600'}}</td>
                 <td class="">{{route.cost}}</td>
               </tr>
             </ng-container>

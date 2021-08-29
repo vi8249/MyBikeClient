@@ -14,26 +14,14 @@ export class BikeService {
 
   constructor(private httpClient: HttpClient, private accountService: AccountService) { }
 
-  getBikes(pageNum: number, pageSize: number, keyword: string): Observable<HttpResponse<Bike[]>> {
+  getBikes(pageNum: number, pageSize: number, keyword: string) {
     var targetUrl = `${this.baseUrl}bikes?PageNum=${pageNum}&PageSize=${pageSize}`;
     if (keyword.length != 0) targetUrl += `&filter=${keyword}`;
-    return this.httpClient.get(targetUrl, { observe: 'response' })
-      .pipe(
-        map((res: HttpResponse<Bike[]>) => {
-          // res.body.forEach(e => {
-          //   e.bikeStation.stationName = e.bikeStation.stationName.slice(12);
-          // });
-          return res;
-        })
-      );
+    return this.httpClient.get(targetUrl, { observe: 'response' });
   }
 
   getBike(id: number) {
-    return this.httpClient.get(this.baseUrl + 'bikes/' + id).pipe(
-      map((res: Bike) => {
-        return res;
-      })
-    );
+    return this.httpClient.get(this.baseUrl + 'bikes/' + id);
   }
 
   editBike(bike: Bike) {

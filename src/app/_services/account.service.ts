@@ -59,9 +59,17 @@ export class AccountService {
     this.currentUserSource.next(null);
   }
 
-  getHistoryRoutes(pageNum: number, pageSize: number): Observable<HttpResponse<any>> {
+  getHistoryRoutes(pageNum: number, pageSize: number): Observable<HttpResponse<UserInfo>> {
     var targetUrl = `${this.baseUrl}users/info?PageNum=${pageNum}&PageSize=${pageSize}`;
-    return this.http.get(targetUrl, { headers: this.getToken(), observe: 'response' });
+    return this.http.get(targetUrl, { headers: this.getToken(), observe: 'response' })
+      .pipe(map((res: HttpResponse<UserInfo>) => {
+        res.body.historyRoute.forEach(h => {
+          //h.borrowTime = new Date(tmp);
+          // if (h.returnTime)
+          //   h.returnTime = new Date(h.returnTime);
+        });
+        return res;
+      }));
   }
 
   addValue(amount: number) {

@@ -1,3 +1,7 @@
+import { DashboardInfo } from './../_models/dashboardInfo';
+import { Observable } from 'rxjs';
+import { HistoryRoute } from './../_models/userInfo';
+import { AccountService } from './account.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
@@ -8,9 +12,10 @@ import { environment } from 'src/environments/environment';
 export class DashboardService {
   baseUrl = environment.apiUrl;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private account: AccountService) { }
 
   getDashboardInfo() {
-    return this.httpClient.get(this.baseUrl + "Dashboard/info");
+    let token = this.account.getToken();
+    return this.httpClient.get<DashboardInfo>(this.baseUrl + "Dashboard/info", { headers: token });
   }
 }

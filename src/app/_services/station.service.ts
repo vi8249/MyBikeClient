@@ -20,16 +20,20 @@ export class StationService {
     return this.httpClient.get(targetUrl, { observe: 'response' })
       .pipe(
         map((res: HttpResponse<Station[]>) => {
-          // res.body.forEach(e => {
-          //   e.station.stationName = e.station.stationName.slice(12);
-          // });
+          res.body.forEach(s => {
+            //s.createTime = new Date(s.createTime);
+          });
           return res;
-        })
-      );
+        }));
   }
 
   getStation(id: string) {
-    return this.httpClient.get(`${this.baseUrl}BikeStations/${id}`);
+    return this.httpClient.get(`${this.baseUrl}BikeStations/${id}`).pipe(
+      map((res: Station) => {
+        //res.createTime = new Date(res.createTime);
+        return res;
+      })
+    );
   }
 
   editStation(station: Station) {
