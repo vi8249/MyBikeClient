@@ -86,7 +86,7 @@
         <td class="">{{station.availableBikes.length}}</td>
         <td class="">{{station.latitude}}</td>
         <td class="">{{station.longitude}}</td>
-        <td class="">{{station.createTime | date:'+08:00'}}</td>
+        <td class="">{{station.createTime | date:'mediumDate':'+16:00'}}</td>
         <td class="sorting_1">
           <button class="btn btn-secondary btn-edit" (click)="getStation(station.id)" data-bs-toggle="modal"
             data-bs-target="#stationModal">
@@ -177,7 +177,7 @@
             <div class="col-5">
               <div class="form-floating mb-3">
                 <input name="stationName" type="text" class="form-control"
-                  [value]="station.createTime | date: 'yyyy/MM/dd':'+1600'" readonly>
+                  [value]="station.createTime | date: 'yyyy/MM/dd'" readonly>
                 <label>建置日期</label>
               </div>
             </div>
