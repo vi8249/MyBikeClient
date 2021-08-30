@@ -1,3 +1,5 @@
+import { UserGuard } from './_guards/user.guard';
+import { AuthGuard } from './_guards/auth.guard';
 import { UserComponent } from './user/user.component';
 import { PriceComponent } from './price/price.component';
 import { StationComponent } from './station/station.component';
@@ -8,10 +10,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
-  { path: "bikes", component: BikesComponent },
-  { path: "stations", component: StationComponent },
-  { path: "pricing", component: PriceComponent },
-  { path: "user", component: UserComponent },
+  { path: "bikes", component: BikesComponent, canActivate: [AuthGuard] },
+  { path: "stations", component: StationComponent, canActivate: [AuthGuard] },
+  { path: "pricing", component: PriceComponent, canActivate: [AuthGuard] },
+  { path: "user", component: UserComponent, canActivate: [UserGuard] },
   { path: "**", component: HomeComponent, pathMatch: "full" }
 ];
 

@@ -1,6 +1,7 @@
 import { Router } from '@angular/router';
 import { AccountService } from './../_services/account.service';
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -11,7 +12,10 @@ export class NavComponent implements OnInit {
   title = 'MyBike';
   model: any = {};
 
-  constructor(public accountService: AccountService, private router: Router) { }
+  constructor(
+    public accountService: AccountService,
+    private router: Router,
+    private toastr: ToastrService) { }
 
   ngOnInit(): void {
     const admin = JSON.parse(localStorage.getItem('user'))?.admin;
@@ -25,6 +29,7 @@ export class NavComponent implements OnInit {
         if (admin) this.router.navigate(['/bikes']);
       }, error => {
         console.log(error);
+        this.toastr.error(error.error);
       });
   }
 
@@ -37,7 +42,13 @@ export class NavComponent implements OnInit {
       .subscribe(res => {
         // console.log(res);
       }, error => {
-        console.log(error);
+        console.log(error.error.errors);
+        if (error.error.errors.Email)
+          this.toastr.error(error.error.errors.Email);
+        if (error.error.errors.Password)
+          this.toastr.error(error.error.errors.Password);
+        if (error.error.errors.ConfirmPassword)
+          this.toastr.error(error.error.errors.ConfirmPassword);
       });
   }
 }
