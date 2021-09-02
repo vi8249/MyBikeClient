@@ -353,7 +353,9 @@
                   <div id="station_map" *ngIf="apiLoaded">
                     <app-map [center]="center" [markers]="markers" [zoom]="zoom"></app-map>
                   </div>
-                  <button type="submit" class="btn btn-warning w-100" data-bs-dismiss="modal">送出</button>
+                  <button type="submit" class="btn btn-warning w-100"
+                    [ngClass]="{'disabled': returnForm.controls['stationId'].value == null}"
+                    data-bs-dismiss="modal">送出</button>
                 </form>
               </div>
 
