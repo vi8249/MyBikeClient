@@ -1,3 +1,4 @@
+import { MapComponent } from './map/map.component';
 import { UserGuard } from './_guards/user.guard';
 import { AuthGuard } from './_guards/auth.guard';
 import { UserComponent } from './user/user.component';

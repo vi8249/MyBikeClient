@@ -30,11 +30,12 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getDashboardInfo()
       .subscribe((res: DashboardInfo) => {
         this.dashboard = res;
+        console.log(this.dashboard);
         this.userIncreasedPercent = (this.dashboard.userIncreasedInThisMonth - this.dashboard.userIncreasedInLastMonth) / this.dashboard.userIncreasedInLastMonth;
         this.bikeLendIncreasedPercent = (this.dashboard.bikeLendInThisMonth - this.dashboard.bikeLendInLastMonth) / this.dashboard.bikeLendInLastMonth;
         this.revenueInceasedPercent = (this.dashboard.revenueInThisMonth - this.dashboard.revenueInLastMonth) / this.dashboard.revenueInLastMonth;
         this.stationInceasedPercent = (this.dashboard.stationIncreasedInThisMonth - this.dashboard.stationIncreasedInLastMonth)
-          / this.dashboard.stationIncreasedInLastMonth == 0 ? 1 : this.dashboard.stationIncreasedInLastMonth;
+          / (this.dashboard.stationIncreasedInLastMonth == 0 ? 1 : this.dashboard.stationIncreasedInLastMonth);
       }, error => {
         console.log(error);
       })

@@ -27,6 +27,11 @@ export interface HistoryRoute {
   currentRoute: boolean;
   borrowTime: Date;
   returnTime: Date;
+  sLat: number
+  sLng: number
+  dLat: number
+  dLng: number
+
 }
 
 // Converts JSON strings to/from your types

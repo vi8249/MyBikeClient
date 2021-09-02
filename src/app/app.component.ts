@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { AccountService } from './_services/account.service';
 import { User } from './_models/user';
 import { HttpClient } from '@angular/common/http';
@@ -15,6 +16,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.setCurrentUser();
+
   }
 
   setCurrentUser() {

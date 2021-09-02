@@ -64,9 +64,7 @@ export class AccountService {
     return this.http.get(targetUrl, { headers: this.getToken(), observe: 'response' })
       .pipe(map((res: HttpResponse<UserInfo>) => {
         res.body.historyRoute.forEach(h => {
-          //h.borrowTime = new Date(tmp);
-          // if (h.returnTime)
-          //   h.returnTime = new Date(h.returnTime);
+          console.log(h.source);
         });
         return res;
       }));

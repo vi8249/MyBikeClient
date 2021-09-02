@@ -4,10 +4,13 @@ import { BikeType } from './../_models/enum/bikeType';
 import { AccountService } from './../_services/account.service';
 import { Component, OnInit } from '@angular/core';
 import { UserInfo } from '../_models/userInfo';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpClient } from '@angular/common/http';
 import { Convert, Pagination } from '../_models/pagination';
 import { Station } from '../_models/station';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user',
@@ -41,7 +44,23 @@ export class UserComponent implements OnInit {
     amount: new FormControl('')
   });
 
-  constructor(public accountService: AccountService, private stationService: StationService, private bikeService: BikeService) { }
+  apiLoaded$: Observable<boolean>;
+  apiLoaded: boolean = false;
+  googleApiKey = environment.googleApiKey;
+
+  zoom: -10;
+  center: google.maps.LatLngLiteral = { lat: 24.146510, lng: 120.673600 };
+  markers: google.maps.LatLngLiteral[] = [];
+
+  constructor(public accountService: AccountService,
+    private stationService: StationService,
+    private bikeService: BikeService,
+    private httpClient: HttpClient) {
+    this.apiLoaded$ = httpClient.jsonp(`https://maps.googleapis.com/maps/api/js?key=${this.googleApiKey}`, 'callback')
+      .pipe(
+        map(() => this.apiLoaded = true ),catchError(() => of(this.apiLoaded = false))
+      );
+  }
 
   ngOnInit(): void {
     this.getHistoryRoutes(1, this.pageSize);
@@ -51,7 +70,6 @@ export class UserComponent implements OnInit {
   getHistoryRoutes(pageNum: number, pageSize: number) {
     return this.accountService.getHistoryRoutes(pageNum, pageSize).subscribe(
       (res: HttpResponse<UserInfo>) => {
-        //console.log(res.headers);
         this.user = res.body;
         this.pagination1 = Convert.toPagination(res.headers.get('x-pagination'));
         this.pagination1 = Convert.generatePageLinks(this.pagination1);
@@ -70,6 +88,7 @@ export class UserComponent implements OnInit {
     this.stationService.getStations(pageNum, pageSize, this.keyword)
       .subscribe((res: HttpResponse<Station[]>) => {
         this.stationList = res.body;
+        this.changeStation(this.stationList[0]);
         this.rentForm.controls['stationId'].setValue(this.stationList[0].id);
         this.returnForm.controls['stationId'].setValue(this.stationList[0].id);
         this.rentForm.controls['bikeId'].setValue(null);
@@ -118,5 +137,18 @@ export class UserComponent implements OnInit {
       }, error => {
         console.log(error);
       })
+  }
+
+  addMarker(lat: number, lng: number) {
+    this.markers.push({ lat: lat, lng: lng });
+  }
+
+  changeStation(station: Station) {
+    this.center = {
+      lat: station.latitude,
+      lng: station.longitude
+    };
+    this.markers = [];
+    this.addMarker(station.latitude, station.longitude);
   }
 }

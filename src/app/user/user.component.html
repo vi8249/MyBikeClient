@@ -1,4 +1,6 @@
 <div *ngIf="user && !user.admin" class="content">
+  <ng-container *ngIf="apiLoaded$ | async"></ng-container>
+
   <div class="container">
     <!-- end row -->
     <div class="row">
@@ -127,20 +129,12 @@
 
           </tbody>
           <tfoot>
-            <tr>
-              <th rowspan="1" colspan="1" style="width: 10%;">單車編號</th>
-              <th rowspan="1" colspan="1" style="width: 20%;">借出站</th>
-              <th rowspan="1" colspan="1" style="width: 20%;">歸還站</th>
-              <th rowspan="1" colspan="1" style="width: 10%;">借出時間</th>
-              <th rowspan="1" colspan="1" style="width: 10%;">歸還時間</th>
-              <th rowspan="1" colspan="1" style="width: 10%;">費用</th>
-
-            </tr>
           </tfoot>
         </table>
       </div>
 
     </div>
+
     <div class="divider div-transparent div-dot"></div>
     <!-- end col -->
     <div class="row mt-5">
@@ -228,7 +222,8 @@
                         [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
 
                         <td class="">
-                          <input type="radio" formControlName="stationId" [id]="'rentId'+ i" [value]="station.id">
+                          <input type="radio" formControlName="stationId" [id]="'rentId'+ i" [value]="station.id"
+                            (change)="changeStation(station)">
                         </td>
                         <td class=""><label [for]="'rentId'+ i">{{station.stationName}}</label></td>
                         <td class="">
@@ -249,6 +244,9 @@
                       </tr>
                     </tfoot>
                   </table>
+                  <div id="station_map" *ngIf="apiLoaded">
+                    <app-map [center]="center" [markers]="markers" [zoom]="zoom"></app-map>
+                  </div>
                   <button type="submit" class="btn btn-warning w-100" data-bs-dismiss="modal">送出</button>
                 </form>
               </div>
@@ -256,6 +254,7 @@
             </div>
 
           </div>
+
         </div>
       </div>
     </div>
@@ -336,7 +335,8 @@
                         [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
 
                         <td class="">
-                          <input type="radio" formControlName="stationId" [id]="'returnId'+ i" [value]="station.id">
+                          <input type="radio" formControlName="stationId" [id]="'returnId'+ i" [value]="station.id"
+                            (change)="changeStation(station)">
                         </td>
                         <td class=""><label [for]="'returnId'+ i">{{station.stationName}}</label></td>
                       </tr>
@@ -348,6 +348,9 @@
                       </tr>
                     </tfoot>
                   </table>
+                  <div id="station_map" *ngIf="apiLoaded">
+                    <app-map [center]="center" [markers]="markers" [zoom]="zoom"></app-map>
+                  </div>
                   <button type="submit" class="btn btn-warning w-100" data-bs-dismiss="modal">送出</button>
                 </form>
               </div>

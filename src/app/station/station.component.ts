@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Convert, Pagination } from '../_models/pagination';
 import { StationService } from '../_services/station.service';
-import { HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Station } from '../_models/station';
 import { BikeType } from '../_models/enum/bikeType';
+import { Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-station',
@@ -20,7 +23,20 @@ export class StationComponent implements OnInit {
   keyword: string = "";
   pageLinkSize: number = 9;
 
-  constructor(public stationService: StationService) { }
+  apiLoaded$: Observable<boolean>;
+  googleApiKey = environment.googleApiKey;
+
+  zoom: 18;
+  center: google.maps.LatLngLiteral = { lat: 24, lng: 12 };
+  markers: google.maps.LatLngLiteral[] = [];
+
+  constructor(public stationService: StationService, httpClient: HttpClient) {
+    this.apiLoaded$ = httpClient.jsonp(`https://maps.googleapis.com/maps/api/js?key=${this.googleApiKey}`, 'callback')
+      .pipe(
+        map(() => true),
+        catchError(() => of(false)),
+      );
+  }
 
   ngOnInit(): void {
     this.getStationList(this.pageNum, this.pageSize);
@@ -45,6 +61,11 @@ export class StationComponent implements OnInit {
     this.stationService.getStation(id).subscribe(
       (res: Station) => {
         this.station = res;
+        this.center = {
+          lat: this.station.latitude,
+          lng: this.station.longitude
+        };
+        this.addMarker(this.station.latitude, this.station.longitude);
         for (var type in BikeType) {
           switch (BikeType[type]) {
             case "Electric":
@@ -91,5 +112,7 @@ export class StationComponent implements OnInit {
     )
   }
 
-
+  addMarker(lat, lng) {
+    this.markers.push({ lat, lng });
+  }
 }
