@@ -18,7 +18,10 @@
           <span *ngIf="userIncreasedPercent == 0" class="material-icons">
             remove
           </span>
-          <p class="me-2">
+          <p *ngIf="dashboard.userIncreasedInLastMonth == 0" class="me-2">
+            {{userIncreased}}人
+          </p>
+          <p *ngIf="dashboard.userIncreasedInLastMonth != 0" class="me-2">
             {{userIncreasedPercent | percent}}
           </p>
         </div>
@@ -44,7 +47,10 @@
           <span *ngIf="bikeLendIncreasedPercent == 0" class="material-icons">
             remove
           </span>
-          <p class="me-2">
+          <p *ngIf="dashboard.bikeLendInLastMonth == 0" class="me-2">
+            {{bikeLendIncreased}} 輛
+          </p>
+          <p *ngIf="dashboard.bikeLendInLastMonth != 0" class="me-2">
             {{bikeLendIncreasedPercent | percent}}
           </p>
         </div>
@@ -68,7 +74,10 @@
           <span *ngIf="stationInceasedPercent == 0" class="material-icons">
             remove
           </span>
-          <p class="me-2">
+          <p *ngIf="dashboard.stationIncreasedInLastMonth == 0" class="me-2">
+            {{stationIncreased}} 站
+          </p>
+          <p *ngIf="dashboard.stationIncreasedInLastMonth != 0" class="me-2">
             {{stationInceasedPercent | percent}}
           </p>
         </div>
@@ -94,7 +103,10 @@
           <span *ngIf="revenueInceasedPercent == 0" class="material-icons">
             remove
           </span>
-          <p class="me-2">
+          <p *ngIf="dashboard.revenueInLastMonth == 0" class="me-2">
+            ${{revenueIncreased}}
+          </p>
+          <p *ngIf="dashboard.revenueInLastMonth != 0" class="me-2">
             {{revenueInceasedPercent | percent}}
           </p>
         </div>
