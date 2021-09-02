@@ -21,10 +21,10 @@ export class UserComponent implements OnInit {
   user: UserInfo;
   pageSize = 5;
   pageLinkSize = 5;
-  pagination1: Pagination;
-  pagination2: Pagination;
-  pagination3: Pagination;
-  types: Array<string>;
+
+  historyPages: Pagination;
+  stationPages: Pagination;
+
   stationList: Station[];
   station: Station;
   keyword: string = "";
@@ -58,7 +58,7 @@ export class UserComponent implements OnInit {
     private httpClient: HttpClient) {
     this.apiLoaded$ = httpClient.jsonp(`https://maps.googleapis.com/maps/api/js?key=${this.googleApiKey}`, 'callback')
       .pipe(
-        map(() => this.apiLoaded = true ),catchError(() => of(this.apiLoaded = false))
+        map(() => this.apiLoaded = true), catchError(() => of(this.apiLoaded = false))
       );
   }
 
@@ -71,8 +71,8 @@ export class UserComponent implements OnInit {
     return this.accountService.getHistoryRoutes(pageNum, pageSize).subscribe(
       (res: HttpResponse<UserInfo>) => {
         this.user = res.body;
-        this.pagination1 = Convert.toPagination(res.headers.get('x-pagination'));
-        this.pagination1 = Convert.generatePageLinks(this.pagination1);
+        this.historyPages = Convert.toPagination(res.headers.get('x-pagination'));
+        this.historyPages = Convert.generatePageLinks(this.historyPages);
         if (this.user.historyRoute[0] != null && this.user.historyRoute[0].returnTime.toString() == "0001-01-01T00:00:00")
           this.user.historyRoute[0].returnTime = null;
       }, error => {
@@ -88,12 +88,12 @@ export class UserComponent implements OnInit {
     this.stationService.getStations(pageNum, pageSize, this.keyword)
       .subscribe((res: HttpResponse<Station[]>) => {
         this.stationList = res.body;
-        this.changeStation(this.stationList[0]);
+        this.changeStation(this.stationList[0], true);
         this.rentForm.controls['stationId'].setValue(this.stationList[0].id);
         this.returnForm.controls['stationId'].setValue(this.stationList[0].id);
         this.rentForm.controls['bikeId'].setValue(null);
-        this.pagination2 = Convert.toPagination(res.headers.get('x-pagination'));
-        this.pagination2 = Convert.generatePageLinks(this.pagination2, this.pageLinkSize);
+        this.stationPages = Convert.toPagination(res.headers.get('x-pagination'));
+        this.stationPages = Convert.generatePageLinks(this.stationPages, this.pageLinkSize);
       }, error => {
         console.log(error);
       });
@@ -143,7 +143,20 @@ export class UserComponent implements OnInit {
     this.markers.push({ lat: lat, lng: lng });
   }
 
-  changeStation(station: Station) {
+  changeStation(station: Station, flag: boolean) {
+    if (flag)
+      this.rentForm.controls['bikeId'].setValue(null);
+    this.rentForm.controls['stationId'].setValue(station.id);
+    this.center = {
+      lat: station.latitude,
+      lng: station.longitude
+    };
+    this.markers = [];
+    this.addMarker(station.latitude, station.longitude);
+  }
+
+  changeReturnStation(station: Station) {
+    this.returnForm.controls['stationId'].setValue(station.id);
     this.center = {
       lat: station.latitude,
       lng: station.longitude
