@@ -88,7 +88,6 @@ export class UserComponent implements OnInit {
         this.buildForm(this.stationList);
         this.setMapConfig(this.stationList[0]);
 
-        this.rentForm.controls['bikeId'].setValue(null);
         this.rentForm.controls['stationId'].setValue(this.stationList[0].id);
         this.returnForm.controls['stationId'].setValue(this.stationList[0].id);
 
@@ -107,18 +106,19 @@ export class UserComponent implements OnInit {
     }
     this.tmpSelect = this.stationList[0].id + '_bike';
     form['stationId'] = new FormControl({ value: formData[0].id });
-    form['bikeId'] = new FormControl('');
     this.rentForm = new FormGroup(form);
   }
 
   rentBike() {
     //console.log(this.rentForm.value);
-    if (this.rentForm.controls['bikeId'].value) {
-      this.bikeService.rentBike(this.rentForm.controls['bikeId'].value).subscribe(() => {
-        this.getHistoryRoutes(1, this.pageSize);
-      }, error => {
-        console.log(error);
-      })
+    const station = this.rentForm.get('stationId').value
+    if (this.rentForm.get(station + '_bike').value) {
+      this.bikeService.rentBike(this.rentForm.get(station + '_bike').value)
+        .subscribe(() => {
+          this.getHistoryRoutes(1, this.pageSize);
+        }, error => {
+          console.log(error);
+        })
     }
     else {
       console.log('error');
@@ -155,10 +155,11 @@ export class UserComponent implements OnInit {
     this.markers.push({ lat: lat, lng: lng });
   }
 
-  setBike(event: any) {
-    var id = (<HTMLInputElement>event.target).value;
-    this.rentForm.controls['bikeId'].setValue(id);
-  }
+  // setBike(event: any) {
+  //   var id = (<HTMLInputElement>event.target).value;
+  //   this.rentForm.controls['bikeId'].setValue(id);
+  //   console.log(this.rentForm.value);
+  // }
 
   setMapConfig(station: Station) {
     this.center = {
@@ -170,15 +171,18 @@ export class UserComponent implements OnInit {
 
   changeStation(station: Station, event: Event) {
     event.preventDefault();
+
     if (!this.tmpSelect.search(this.rentForm.get('stationId').value)) {
       if (this.rentForm.get('stationId').value != station.id) {
         this.rentForm.get(this.tmpSelect).setValue(null);
       }
     }
+
     this.tmpSelect = station.id + '_bike';
-    this.rentForm.controls['bikeId'].setValue(null);
     this.rentForm.controls['stationId'].setValue(station.id);
     this.setMapConfig(station);
+
+    //console.log(this.rentForm.value);
   }
 
   changeReturnStation(station: Station) {
