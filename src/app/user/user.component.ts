@@ -86,8 +86,8 @@ export class UserComponent implements OnInit {
       .subscribe((res: HttpResponse<Station[]>) => {
         this.stationList = res.body;
         this.buildForm(this.stationList);
-        //this.changeStation(this.stationList[0]);
 
+        this.rentForm.controls['bikeId'].setValue(null);
         this.rentForm.controls['stationId'].setValue(this.stationList[0].id);
         this.returnForm.controls['stationId'].setValue(this.stationList[0].id);
 
@@ -168,6 +168,7 @@ export class UserComponent implements OnInit {
       }
     }
     this.tmpSelect = station.id + '_bike';
+    this.rentForm.controls['bikeId'].setValue(null);
 
     this.rentForm.controls['stationId'].setValue(station.id);
     this.center = {
