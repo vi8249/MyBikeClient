@@ -1,6 +1,5 @@
 import { BikeService } from './../_services/bike.service';
 import { StationService } from './../_services/station.service';
-import { BikeType } from './../_models/enum/bikeType';
 import { AccountService } from './../_services/account.service';
 import { Component, OnInit } from '@angular/core';
 import { UserInfo } from '../_models/userInfo';
@@ -30,11 +29,8 @@ export class UserComponent implements OnInit {
   keyword: string = "";
   pageNum: number;
 
-
-  rentForm = new FormGroup({
-    stationId: new FormControl(''),
-    bikeId: new FormControl(''),
-  });
+  tmpSelect: string;
+  rentForm: FormGroup;
 
   returnForm = new FormGroup({
     stationId: new FormControl('')
@@ -56,7 +52,7 @@ export class UserComponent implements OnInit {
     private stationService: StationService,
     private bikeService: BikeService,
     private httpClient: HttpClient) {
-    this.apiLoaded$ = httpClient.jsonp(`https://maps.googleapis.com/maps/api/js?key=${this.googleApiKey}`, 'callback')
+    this.apiLoaded$ = this.httpClient.jsonp(`https://maps.googleapis.com/maps/api/js?key=${this.googleApiKey}`, 'callback')
       .pipe(
         map(() => this.apiLoaded = true), catchError(() => of(this.apiLoaded = false))
       );
@@ -73,6 +69,7 @@ export class UserComponent implements OnInit {
         this.user = res.body;
         this.historyPages = Convert.toPagination(res.headers.get('x-pagination'));
         this.historyPages = Convert.generatePageLinks(this.historyPages);
+
         if (this.user.historyRoute[0] != null && this.user.historyRoute[0].returnTime.toString() == "0001-01-01T00:00:00")
           this.user.historyRoute[0].returnTime = null;
       }, error => {
@@ -88,10 +85,12 @@ export class UserComponent implements OnInit {
     this.stationService.getStations(pageNum, pageSize, this.keyword)
       .subscribe((res: HttpResponse<Station[]>) => {
         this.stationList = res.body;
-        this.changeStation(this.stationList[0], true);
+        this.buildForm(this.stationList);
+        //this.changeStation(this.stationList[0]);
+
         this.rentForm.controls['stationId'].setValue(this.stationList[0].id);
         this.returnForm.controls['stationId'].setValue(this.stationList[0].id);
-        this.rentForm.controls['bikeId'].setValue(null);
+
         this.stationPages = Convert.toPagination(res.headers.get('x-pagination'));
         this.stationPages = Convert.generatePageLinks(this.stationPages, this.pageLinkSize);
       }, error => {
@@ -99,9 +98,21 @@ export class UserComponent implements OnInit {
       });
   }
 
+  buildForm(formData: Station[]) {
+    let form = {};
+    for (let index = 0; index < formData.length; index++) {
+      const element = formData[index];
+      form[element.id + '_bike'] = new FormControl();
+    }
+    this.tmpSelect = this.stationList[0].id + '_bike';
+    form['stationId'] = new FormControl({ value: formData[0].id });
+    form['bikeId'] = new FormControl('');
+    this.rentForm = new FormGroup(form);
+  }
+
   rentBike() {
+    //console.log(this.rentForm.value);
     if (this.rentForm.controls['bikeId'].value) {
-      //console.log(this.rentForm.value);
       this.bikeService.rentBike(this.rentForm.controls['bikeId'].value).subscribe(() => {
         this.getHistoryRoutes(1, this.pageSize);
       }, error => {
@@ -140,18 +151,29 @@ export class UserComponent implements OnInit {
   }
 
   addMarker(lat: number, lng: number) {
+    this.markers = [];
     this.markers.push({ lat: lat, lng: lng });
   }
 
-  changeStation(station: Station, flag: boolean) {
-    if (flag)
-      this.rentForm.controls['bikeId'].setValue(null);
+  setBike(event: any) {
+    var id = (<HTMLInputElement>event.target).value;
+    this.rentForm.controls['bikeId'].setValue(id);
+  }
+
+  changeStation(station: Station, event: Event) {
+    event.preventDefault();
+    if (!this.tmpSelect.search(this.rentForm.get('stationId').value)) {
+      if (this.rentForm.get('stationId').value != station.id) {
+        this.rentForm.get(this.tmpSelect).setValue(null);
+      }
+    }
+    this.tmpSelect = station.id + '_bike';
+
     this.rentForm.controls['stationId'].setValue(station.id);
     this.center = {
       lat: station.latitude,
       lng: station.longitude
     };
-    this.markers = [];
     this.addMarker(station.latitude, station.longitude);
   }
 
@@ -161,7 +183,6 @@ export class UserComponent implements OnInit {
       lat: station.latitude,
       lng: station.longitude
     };
-    this.markers = [];
     this.addMarker(station.latitude, station.longitude);
   }
 }

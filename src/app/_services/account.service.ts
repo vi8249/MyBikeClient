@@ -64,7 +64,7 @@ export class AccountService {
     return this.http.get(targetUrl, { headers: this.getToken(), observe: 'response' })
       .pipe(map((res: HttpResponse<UserInfo>) => {
         res.body.historyRoute.forEach(h => {
-          console.log(h.source);
+          //console.log(h.source);
         });
         return res;
       }));

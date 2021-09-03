@@ -178,7 +178,7 @@
               <div class="col-sm-12 col-md-7 d-flex justify-content-start">
                 <ul class="pagination">
                   <li class="paginate_button page-item previous"
-                    [ngClass]="{'disabled': stationPages.previousPageLink==null}">
+                    [ngClass]="{'disabled': stationPages.previousPageLink == null}">
                     <a class="page-link" role="button" (click)="getStationList(stationPages.currentPage-1,pageSize)">
                       <span class="material-icons">
                         navigate_before
@@ -198,7 +198,8 @@
                     <a class="page-link">...</a>
                   </li>
 
-                  <li class="paginate_button page-item next" [ngClass]="{'disabled': stationPages.nextPageLink==null}">
+                  <li class="paginate_button page-item next"
+                    [ngClass]="{'disabled': stationPages.nextPageLink == null}">
                     <a class="page-link" role="button" (click)="getStationList(stationPages.currentPage+1,pageSize)">
                       <span class="material-icons">
                         navigate_next
@@ -219,15 +220,14 @@
                     </thead>
                     <tbody>
                       <tr class="tRow" *ngFor="let station of stationList; let i = index"
-                        [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
-
+                        (click)="changeStation(station, $event)" [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
                         <td class="">
-                          <input type="radio" formControlName="stationId" [id]="'rentId'+ i" [value]="station.id"
-                            (change)="changeStation(station, true)">
+                          <input type="radio" formControlName="stationId" [id]="'rentId'+ i" [value]="station.id">
                         </td>
                         <td class=""><label [for]="'rentId'+ i">{{station.stationName}}</label></td>
                         <td class="">
-                          <select class="form-select" formControlName="bikeId" (change)="changeStation(station, false)">
+                          <select class="form-select" formControlName="{{station.id + '_bike'}}"
+                            (change)="setBike($event)">
                             <option disabled value="null">選擇</option>
                             <option *ngFor="let b of station.availableBikes" [value]="b.id">
                               {{b.bikeType}}
@@ -334,11 +334,10 @@
                     </thead>
                     <tbody>
                       <tr class="tRow" *ngFor="let station of stationList; let i = index"
-                        [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
+                        (click)="changeReturnStation(station)" [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
 
                         <td class="">
-                          <input type="radio" formControlName="stationId" [id]="'returnId'+ i" [value]="station.id"
-                            (change)="changeReturnStation(station)">
+                          <input type="radio" formControlName="stationId" [id]="'returnId'+ i" [value]="station.id">
                         </td>
                         <td class=""><label [for]="'returnId'+ i">{{station.stationName}}</label></td>
                       </tr>
