@@ -144,7 +144,6 @@ export class UserComponent implements OnInit {
   addValue() {
     if (this.addForm.controls['amount'].value > 0)
       this.accountService.addValue(this.addForm.controls['amount'].value).subscribe(res => {
-        //console.log(res);
         this.getHistoryRoutes(1, this.pageSize);
       }, error => {
         console.log(error);
@@ -180,7 +179,6 @@ export class UserComponent implements OnInit {
     this.rentForm.controls['bikeId'].setValue(null);
     this.rentForm.controls['stationId'].setValue(station.id);
     this.setMapConfig(station);
-
   }
 
   changeReturnStation(station: Station) {
