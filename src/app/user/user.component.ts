@@ -86,7 +86,7 @@ export class UserComponent implements OnInit {
       .subscribe((res: HttpResponse<Station[]>) => {
         this.stationList = res.body;
         this.buildForm(this.stationList);
-        this.setMapCenter(this.stationList[0]);
+        this.setMapConfig(this.stationList[0]);
 
         this.rentForm.controls['bikeId'].setValue(null);
         this.rentForm.controls['stationId'].setValue(this.stationList[0].id);
@@ -161,11 +161,12 @@ export class UserComponent implements OnInit {
     this.rentForm.controls['bikeId'].setValue(id);
   }
 
-  setMapCenter(station: Station) {
+  setMapConfig(station: Station) {
     this.center = {
       lat: station.latitude,
       lng: station.longitude
     };
+    this.addMarker(station.latitude, station.longitude);
   }
 
   changeStation(station: Station, event: Event) {
@@ -178,13 +179,12 @@ export class UserComponent implements OnInit {
     this.tmpSelect = station.id + '_bike';
     this.rentForm.controls['bikeId'].setValue(null);
     this.rentForm.controls['stationId'].setValue(station.id);
-    this.setMapCenter(station);
-    this.addMarker(station.latitude, station.longitude);
+    this.setMapConfig(station);
+
   }
 
   changeReturnStation(station: Station) {
     this.returnForm.controls['stationId'].setValue(station.id);
-    this.setMapCenter(station);
-    this.addMarker(station.latitude, station.longitude);
+    this.setMapConfig(station);
   }
 }
