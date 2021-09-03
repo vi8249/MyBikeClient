@@ -236,14 +236,9 @@
                       </tr>
                     </tbody>
                     <tfoot>
-                      <tr>
-                        <th rowspan="1" colspan="1"></th>
-                        <th rowspan="1" colspan="1">站名</th>
-                        <th rowspan="1" colspan="1">車型</th>
-                      </tr>
                     </tfoot>
                   </table>
-                  <div id="station_map" *ngIf="apiLoaded">
+                  <div id="station_map" *ngIf="apiLoaded && stationList.length>0">
                     <app-map [center]="center" [markers]="markers" [zoom]="zoom"></app-map>
                   </div>
                   <button type="submit" class="btn btn-warning w-100" [ngClass]="{'disabled': rentForm.get('stationId').value ==null ||
@@ -342,13 +337,9 @@
                       </tr>
                     </tbody>
                     <tfoot>
-                      <tr>
-                        <th rowspan="1" colspan="1"></th>
-                        <th rowspan="1" colspan="1">站名</th>
-                      </tr>
                     </tfoot>
                   </table>
-                  <div id="station_map" *ngIf="apiLoaded">
+                  <div id="station_map" *ngIf="apiLoaded && stationList.length>0">
                     <app-map [center]="center" [markers]="markers" [zoom]="zoom"></app-map>
                   </div>
                   <button type="submit" class="btn btn-warning w-100"
