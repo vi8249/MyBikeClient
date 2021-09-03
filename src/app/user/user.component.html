@@ -164,7 +164,7 @@
             <div class="col-12 text-center">
               <h3>租車</h3>
               <div id="station_filter" class="dataTables_filter my-2">
-                <form #searchForm="ngForm">
+                <form #searchRentForm="ngForm" autocomplete="off">
                   <div class="form-floating">
 
                     <input name="keyword" [(ngModel)]="keyword" (keyup.enter)="getStationList(1, pageSize)" type="text"
@@ -275,7 +275,7 @@
             <div class="col-12 text-center">
               <h3>還車</h3>
               <div id="station_filter" class="dataTables_filter my-2">
-                <form #searchForm="ngForm">
+                <form #searchReturnForm="ngForm" autocomplete="off">
                   <div class="form-floating">
 
                     <input name="keyword" [(ngModel)]="keyword" (keyup.enter)="getStationList(1, pageSize)" type="text"
