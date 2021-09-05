@@ -1,22 +1,26 @@
+import { ToastrService } from 'ngx-toastr';
+import { DashboardService } from './../_services/dashboard.service';
 import { BikeService } from './../_services/bike.service';
 import { StationService } from './../_services/station.service';
 import { AccountService } from './../_services/account.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserInfo } from '../_models/userInfo';
 import { HttpResponse, HttpClient } from '@angular/common/http';
 import { Convert, Pagination } from '../_models/pagination';
 import { Station } from '../_models/station';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { User } from '../_models/user';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
+  currentUser: User;
   user: UserInfo;
   pageSize = 5;
   pageLinkSize = 5;
@@ -51,7 +55,9 @@ export class UserComponent implements OnInit {
   constructor(public accountService: AccountService,
     private stationService: StationService,
     private bikeService: BikeService,
-    private httpClient: HttpClient) {
+    private toastrService: ToastrService,
+    private httpClient: HttpClient,
+    private dashboardService: DashboardService) {
     this.apiLoaded$ = this.httpClient.jsonp(`https://maps.googleapis.com/maps/api/js?key=${this.googleApiKey}`, 'callback')
       .pipe(
         map(() => this.apiLoaded = true), catchError(() => of(this.apiLoaded = false))
@@ -61,6 +67,12 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     this.getHistoryRoutes(1, this.pageSize);
     this.getStationList(1, this.pageSize);
+    //this.accountService.currentUser$.subscribe((res: User) => this.currentUser = res);
+    //this.dashboardService.createHubConnection(this.currentUser);
+  }
+
+  ngOnDestroy(): void {
+    //this.dashboardService.stopHubConnection();
   }
 
   getHistoryRoutes(pageNum: number, pageSize: number) {
@@ -112,12 +124,18 @@ export class UserComponent implements OnInit {
   rentBike() {
     //console.log(this.rentForm.value);
     const station = this.rentForm.get('stationId').value
+
     if (this.rentForm.get(station + '_bike').value) {
       this.bikeService.rentBike(this.rentForm.get(station + '_bike').value)
-        .subscribe(() => {
+        .subscribe((res: any) => {
           this.getHistoryRoutes(1, this.pageSize);
+          this.dashboardService.updateDashboard().then(() => {
+            //console.log('update dashboard');
+          });
+          this.toastrService.info(res.value);
         }, error => {
           console.log(error);
+          this.toastrService.warning(error.error);
         })
     }
     else {
@@ -127,14 +145,17 @@ export class UserComponent implements OnInit {
 
   returnBike() {
     if (this.returnForm.controls['stationId'].value) {
-      //console.log(this.returnForm.value);
-
       this.bikeService.returnBike(
         this.returnForm.controls['stationId'].value,
-        this.user.bike).subscribe(res => {
+        this.user.bike).subscribe((res: any) => {
           this.getHistoryRoutes(1, this.pageSize);
+          this.dashboardService.updateDashboard().then(() => {
+            console.log('update dashboard');
+          });
+          this.toastrService.info(res.value);
         }, error => {
           console.log(error);
+          this.toastrService.warning(error.error);
         })
     } else {
       console.log('error');
@@ -143,13 +164,17 @@ export class UserComponent implements OnInit {
 
   addValue() {
     if (this.addForm.controls['amount'].value > 0)
-      this.accountService.addValue(this.addForm.controls['amount'].value).subscribe(res => {
-        this.getHistoryRoutes(1, this.pageSize);
-      }, error => {
-        console.log(error);
-      })
+      this.accountService.addValue(this.addForm.controls['amount'].value)
+        .subscribe((res: any) => {
+          this.getHistoryRoutes(1, this.pageSize);
+          this.toastrService.info(res.value)
+        }, error => {
+          console.log(error);
+          this.toastrService.warning(error.error)
+        })
   }
 
+  // map configure
   addMarker(lat: number, lng: number) {
     this.markers = [];
     this.markers.push({ lat: lat, lng: lng });

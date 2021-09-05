@@ -2,6 +2,8 @@ import { Router } from '@angular/router';
 import { AccountService } from './../_services/account.service';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { DashboardService } from '../_services/dashboard.service';
+import { User } from '../_models/user';
 
 @Component({
   selector: 'app-nav',
@@ -14,11 +16,11 @@ export class NavComponent implements OnInit {
 
   constructor(
     public accountService: AccountService,
+    private dashboard: DashboardService,
     private router: Router,
     private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    const admin = JSON.parse(localStorage.getItem('user'))?.admin;
   }
 
   login() {
@@ -39,16 +41,17 @@ export class NavComponent implements OnInit {
 
   register() {
     this.accountService.register(this.model)
-      .subscribe(res => {
-        // console.log(res);
+      .subscribe((res: User) => {
+        this.dashboard.updateDashboard()
+          .catch(error => console.log(error));
       }, error => {
-        console.log(error.error.errors);
-        if (error.error.errors.Email)
-          this.toastr.error(error.error.errors.Email);
-        if (error.error.errors.Password)
-          this.toastr.error(error.error.errors.Password);
-        if (error.error.errors.ConfirmPassword)
-          this.toastr.error(error.error.errors.ConfirmPassword);
+        let errors = error.error.errors;
+        if (errors.Email)
+          this.toastr.error(errors.Email);
+        if (errors.Password)
+          this.toastr.error(errors.Password);
+        if (errors.ConfirmPassword)
+          this.toastr.error(errors.ConfirmPassword);
       });
   }
 }

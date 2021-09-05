@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   apiUrl: 'https://localhost:5001/api/',
-  googleApiKey: 'AIzaSyBCwOiIPr6ihSZlzB1PfEDv9RNg_Uw1iGY'
+  googleApiKey: 'AIzaSyBCwOiIPr6ihSZlzB1PfEDv9RNg_Uw1iGY',
+  hubUrl: 'https://localhost:5001/hubs/'
 };
 
 /*

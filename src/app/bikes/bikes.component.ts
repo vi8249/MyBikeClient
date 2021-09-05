@@ -57,6 +57,8 @@ export class BikesComponent implements OnInit {
         this.getBikeList(this.pageNum, this.pageSize, this.pageLinkSize);
       }, error => {
         console.log(error);
+      }, () => {
+        //console.log();
       }
     )
   }

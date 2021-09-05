@@ -7,6 +7,7 @@ import { BikeType } from '../_models/enum/bikeType';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { catchError, map } from 'rxjs/operators';
+import { DashboardService } from '../_services/dashboard.service';
 
 @Component({
   selector: 'app-station',
@@ -30,7 +31,9 @@ export class StationComponent implements OnInit {
   center: google.maps.LatLngLiteral = { lat: 24, lng: 12 };
   markers: google.maps.LatLngLiteral[] = [];
 
-  constructor(public stationService: StationService, httpClient: HttpClient) {
+  constructor(public stationService: StationService,
+    private dashboard: DashboardService,
+    httpClient: HttpClient) {
     this.apiLoaded$ = httpClient.jsonp(`https://maps.googleapis.com/maps/api/js?key=${this.googleApiKey}`, 'callback')
       .pipe(
         map(() => true),
@@ -104,7 +107,9 @@ export class StationComponent implements OnInit {
   deleteStation() {
     this.stationService.deleteStation(this.station.id).subscribe(
       res => {
-        console.log(res);
+        //console.log(res);
+        this.dashboard.updateDashboard()
+          .catch(error => console.log(error));
         this.getStationList(this.pageNum, this.pageSize);
       }, error => {
         console.log(error);

@@ -1,3 +1,4 @@
+import { PresenceService } from './_services/presence.service';
 import { environment } from 'src/environments/environment';
 import { AccountService } from './_services/account.service';
 import { User } from './_models/user';
@@ -12,16 +13,17 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   bikes: any;
 
-  constructor(private http: HttpClient, private accountService: AccountService) { }
+  constructor(private http: HttpClient,
+    private accountService: AccountService) { }
 
   ngOnInit() {
     this.setCurrentUser();
-
   }
 
   setCurrentUser() {
     const user: User = JSON.parse(localStorage.getItem('user')!);
-    this.accountService.setCurrentUser(user);
-
+    if (user) {
+      this.accountService.setCurrentUser(user);
+    }
   }
 }

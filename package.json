@@ -21,6 +21,7 @@
     "@angular/platform-browser": "~12.2.0",
     "@angular/platform-browser-dynamic": "~12.2.0",
     "@angular/router": "~12.2.0",
+    "@microsoft/signalr": "^5.0.9",
     "@popperjs/core": "^2.9.3",
     "@types/google.maps": "^3.45.6",
     "bootstrap": "^5.0.2",

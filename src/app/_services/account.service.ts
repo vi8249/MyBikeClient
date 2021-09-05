@@ -1,3 +1,4 @@
+import { DashboardService } from './dashboard.service';
 import { environment } from './../../environments/environment';
 import { User } from '../_models/user';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
@@ -6,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { ReplaySubject } from 'rxjs';
 import { UserInfo } from '../_models/userInfo';
 import { Observable } from 'rxjs';
+import { PresenceService } from './presence.service';
 
 
 @Injectable({
@@ -16,7 +18,10 @@ export class AccountService {
   private currentUserSource = new ReplaySubject<User>(1);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private presence: PresenceService,
+    private dashboard: DashboardService
+  ) { }
 
   login(model: any) {
     return this.http.post(this.baseUrl + "users/login", model).pipe(
@@ -24,7 +29,7 @@ export class AccountService {
         const user = res;
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUser(user);
         }
       })
     );
@@ -32,18 +37,20 @@ export class AccountService {
 
   register(model: any) {
     return this.http.post(this.baseUrl + "users/register", model).pipe(
-      map((res: User) => {
-        const user = res;
+      map((user: User) => {
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUser(user);
         }
+        return user;
       })
     );
   }
 
   setCurrentUser(user: User) {
     this.currentUserSource.next(user);
+    this.presence.createHubConnection(user);
+    this.dashboard.createHubConnection(user);
   }
 
   getToken(): HttpHeaders {
@@ -57,17 +64,13 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+    this.presence.stopHubConnection();
+    this.dashboard.stopHubConnection();
   }
 
-  getHistoryRoutes(pageNum: number, pageSize: number): Observable<HttpResponse<UserInfo>> {
+  getHistoryRoutes(pageNum: number, pageSize: number) {
     var targetUrl = `${this.baseUrl}users/info?PageNum=${pageNum}&PageSize=${pageSize}`;
-    return this.http.get(targetUrl, { headers: this.getToken(), observe: 'response' })
-      .pipe(map((res: HttpResponse<UserInfo>) => {
-        res.body.historyRoute.forEach(h => {
-          //console.log(h.source);
-        });
-        return res;
-      }));
+    return this.http.get(targetUrl, { headers: this.getToken(), observe: 'response' });
   }
 
   addValue(amount: number) {
