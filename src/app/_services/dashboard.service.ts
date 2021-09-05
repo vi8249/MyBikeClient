@@ -7,6 +7,8 @@ import { environment } from 'src/environments/environment';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { User } from '../_models/user';
 import { ToastrService } from 'ngx-toastr';
+import { BusyService } from './busy.service';
+import { delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,7 @@ export class DashboardService {
   dashboard$ = this.dashboardSource.asObservable();
 
   constructor(private httpClient: HttpClient,
-    //private account: AccountService,
+    private busyService: BusyService,
     private toastr: ToastrService) { }
 
   createHubConnection(user: User) {
@@ -33,12 +35,13 @@ export class DashboardService {
       .withAutomaticReconnect()
       .build();
 
-    this.start()
+    this.start(user)
 
     if (user.admin) {
       this.hubConnection.on('GetDashboard', (dashboardInfo) => {
         const dashboard = this.prepareInfo(dashboardInfo);
         this.dashboardSource.next(dashboard);
+        this.busyService.idle()
       });
 
       this.hubConnection.on('UpdateDashboard', (dashboardInfo, username) => {
@@ -49,11 +52,14 @@ export class DashboardService {
     }
   }
 
-  private start() {
+  private start(user: User) {
     this.thenable = this.hubConnection.start();
     this.thenable
-      //.then(() => console.log('Connection started!'))
-      .catch(err => console.log('Error while establishing connection :('));
+      .then(() => {
+        if (user.admin)
+          this.busyService.busy()
+      })
+      .catch(err => console.log('Error while establishing connection :('))
   }
 
   stopHubConnection() {
@@ -61,15 +67,12 @@ export class DashboardService {
       this.hubConnection.stop().catch(error => console.log(error));
   }
 
-  // getDashboardInfo() {
-  //   let token = this.account.getToken();
-  //   return this.httpClient.get<DashboardInfo>(this.baseUrl + "Dashboard/info", { headers: token });
-  // }
-
   async updateDashboard() {
     this.thenable.then(() => {
+      this.busyService.busy();
       return this.hubConnection.invoke('UpdateDashboard')
-        .catch(error => console.log(error));
+        .catch(error => console.log(error))
+        .finally(() => this.busyService.idle());
     });
   }
 

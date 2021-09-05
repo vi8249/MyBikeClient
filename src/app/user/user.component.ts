@@ -150,7 +150,7 @@ export class UserComponent implements OnInit, OnDestroy {
         this.user.bike).subscribe((res: any) => {
           this.getHistoryRoutes(1, this.pageSize);
           this.dashboardService.updateDashboard().then(() => {
-            console.log('update dashboard');
+            //console.log('update dashboard');
           });
           this.toastrService.info(res.value);
         }, error => {
