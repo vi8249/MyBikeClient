@@ -16,7 +16,12 @@
       <h5>專案內容：</h5>
       <h6>前端：Angular 12</h6>
       <h6>後端：.Net(Core) 5</h6>
-      <p>MSSQL託管於Google Cloud Platform SQL，並串連Google Map API。發布於Heroku</p>
+      <ul>
+        <li> ORM：Entity framework core</li>
+        <li> Database：MSSQL並託管於Google Cloud Platform SQL</li>
+        <li> 其他：串連Google Map API服務。</li>
+        <li>發布於Heroku</li>
+      </ul>
     </div>
   </ng-container>
   <ng-container *ngIf="(this.accountService.currentUser$ | async) && !(this.accountService.currentUser$ | async)?.admin">
