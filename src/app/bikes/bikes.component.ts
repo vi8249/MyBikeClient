@@ -3,6 +3,7 @@ import { BikeService } from './../_services/bike.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Convert, Pagination } from '../_models/pagination';
+import { DashboardService } from '../_services/dashboard.service';
 
 @Component({
   selector: 'app-bikes',
@@ -20,7 +21,8 @@ export class BikesComponent implements OnInit {
   keyword: string = "";
   pageLinkSize: number = 9;
 
-  constructor(public bikeService: BikeService) { }
+  constructor(public bikeService: BikeService,
+    public dashboardService: DashboardService) { }
 
   ngOnInit(): void {
     this.getBikeList(this.pageNum, this.pageSize, this.pageLinkSize);

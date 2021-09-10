@@ -41,7 +41,7 @@ export class DashboardService {
       this.hubConnection.on('GetDashboard', (dashboardInfo) => {
         const dashboard = this.prepareInfo(dashboardInfo);
         this.dashboardSource.next(dashboard);
-        this.busyService.idle()
+        //this.busyService.idle()
       });
 
       this.hubConnection.on('UpdateDashboard', (dashboardInfo, username) => {
@@ -56,8 +56,8 @@ export class DashboardService {
     this.thenable = this.hubConnection.start();
     this.thenable
       .then(() => {
-        if (user.admin)
-          this.busyService.busy()
+        // if (user.admin)
+        //   this.busyService.busy()
       })
       .catch(err => console.log('Error while establishing connection :('))
   }
@@ -69,10 +69,10 @@ export class DashboardService {
 
   async updateDashboard() {
     this.thenable.then(() => {
-      this.busyService.busy();
+      //this.busyService.busy();
       return this.hubConnection.invoke('UpdateDashboard')
         .catch(error => console.log(error))
-        .finally(() => this.busyService.idle());
+        //.finally(() => this.busyService.idle());
     });
   }
 

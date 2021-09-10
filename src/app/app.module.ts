@@ -18,6 +18,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MapComponent } from './map/map.component';
 import { GoogleMapsModule } from '@angular/google-maps'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { GoogleMapsModule } from '@angular/google-maps'
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    MatProgressSpinnerModule,
     ToastrModule.forRoot({ positionClass: 'toast-bottom-right' }),
     NgxSpinnerModule,
 

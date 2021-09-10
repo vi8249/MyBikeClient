@@ -1,4 +1,4 @@
-<app-dashboard></app-dashboard>
+<app-dashboard [dashboard]="(dashboardService.dashboard$ | async)"></app-dashboard>
 
 <div *ngIf="pagination" class="row mt-5">
   <div class="col-sm-12 col-md-5">

@@ -9,3 +9,8 @@
 .negative-percent {
   color: red;
 }
+
+.card-body ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+  stroke: orange;
+  width: 20px;
+}
