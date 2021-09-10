@@ -11,7 +11,7 @@ import { User } from '../_models/user';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnInit {
-  title = 'MyBike';
+  title = 'My單車';
   model: any = {};
 
   constructor(

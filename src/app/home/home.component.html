@@ -1,17 +1,26 @@
 <div class="container">
   <ng-container *ngIf="!(this.accountService.currentUser$ | async)">
     <div class="text-center">
-      <h1>Welcome to MyBike</h1>
-      <h6>Please sign in or register first!</h6>
+      <h1>歡迎來到My單車</h1>
+      <h5>請先登入或註冊帳號</h5>
+      <h6 class="mt-5">管理員帳號：admin@xx.com</h6>
+      <h6>管理員密碼：PaSSwoRD123$</h6>
     </div>
     <div class="text-center mt-5">
       <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal"
-        data-bs-target="#loginModal">Login</button>
+        data-bs-target="#loginModal">登入</button>
       <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
-        data-bs-target="#registerModal">Sign-up</button>
+        data-bs-target="#registerModal">註冊</button>
+    </div>
+    <div class="footer text-start fixed-bottom mx-3">
+      <h5>專案內容：</h5>
+      <h6>前端：Angular 12</h6>
+      <h6>後端：.Net(Core) 5</h6>
+      <p>MSSQL託管於Google Cloud Platform SQL，並串連Google Map API。發布於Heroku</p>
     </div>
   </ng-container>
+  <ng-container *ngIf="(this.accountService.currentUser$ | async) && !(this.accountService.currentUser$ | async)?.admin">
+    <app-user></app-user>
+  </ng-container>
 </div>
-<ng-container *ngIf="(this.accountService.currentUser$ | async) && !(this.accountService.currentUser$ | async)?.admin">
-  <app-user></app-user>
-</ng-container>
+
