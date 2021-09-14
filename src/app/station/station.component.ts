@@ -12,17 +12,17 @@ import { catchError, map } from 'rxjs/operators';
 @Component({
   selector: 'app-station',
   templateUrl: './station.component.html',
-  styleUrls: ['./station.component.css']
+  styleUrls: ['./station.component.css'],
 })
 export class StationComponent implements OnInit {
   station: Station;
   stationList: Station[];
   pageNum = 1;
-  pageSizeList = [20, 25, 30]
+  pageSizeList = [20, 25, 30];
   pageSize: number = this.pageSizeList[0];
   pagination: Pagination;
-  keyword: string = "";
-  pageLinkSize: number = 9;
+  keyword: string = '';
+  pageLinkSize: number = 6;
 
   apiLoaded$: Observable<boolean>;
   googleApiKey = environment.googleApiKey;
@@ -31,13 +31,19 @@ export class StationComponent implements OnInit {
   center: google.maps.LatLngLiteral = { lat: 24, lng: 12 };
   markers: google.maps.LatLngLiteral[] = [];
 
-  constructor(public stationService: StationService,
+  constructor(
+    public stationService: StationService,
     public dashboardService: DashboardService,
-    httpClient: HttpClient) {
-    this.apiLoaded$ = httpClient.jsonp(`https://maps.googleapis.com/maps/api/js?key=${this.googleApiKey}`, 'callback')
+    httpClient: HttpClient
+  ) {
+    this.apiLoaded$ = httpClient
+      .jsonp(
+        `https://maps.googleapis.com/maps/api/js?key=${this.googleApiKey}`,
+        'callback'
+      )
       .pipe(
         map(() => true),
-        catchError(() => of(false)),
+        catchError(() => of(false))
       );
   }
 
@@ -49,15 +55,17 @@ export class StationComponent implements OnInit {
     this.pageNum = pageNum;
     this.pageSize = pageSize;
 
-    this.stationService.getStations(pageNum, pageSize, this.keyword)
-      .subscribe((res: HttpResponse<Station[]>) => {
+    this.stationService.getStations(pageNum, pageSize, this.keyword).subscribe(
+      (res: HttpResponse<Station[]>) => {
         this.stationList = res.body;
         this.station = this.stationList[0];
         this.pagination = Convert.toPagination(res.headers.get('x-pagination'));
         this.pagination = Convert.generatePageLinks(this.pagination);
-      }, error => {
+      },
+      (error) => {
         console.log(error);
-      });
+      }
+    );
   }
 
   getStation(id: string) {
@@ -66,55 +74,67 @@ export class StationComponent implements OnInit {
         this.station = res;
         this.center = {
           lat: this.station.latitude,
-          lng: this.station.longitude
+          lng: this.station.longitude,
         };
         this.addMarker(this.station.latitude, this.station.longitude);
         for (var type in BikeType) {
           switch (BikeType[type]) {
-            case "Electric":
-              this.station.Electric = this.station.availableBikes.filter(b => b.bikeType == BikeType[type]).length;
+            case 'Electric':
+              this.station.Electric = this.station.availableBikes.filter(
+                (b) => b.bikeType == BikeType[type]
+              ).length;
               break;
-            case "Road":
-              this.station.Road = this.station.availableBikes.filter(b => b.bikeType == BikeType[type]).length;
+            case 'Road':
+              this.station.Road = this.station.availableBikes.filter(
+                (b) => b.bikeType == BikeType[type]
+              ).length;
               break;
-            case "Hybrid":
-              this.station.Hybrid = this.station.availableBikes.filter(b => b.bikeType == BikeType[type]).length;
+            case 'Hybrid':
+              this.station.Hybrid = this.station.availableBikes.filter(
+                (b) => b.bikeType == BikeType[type]
+              ).length;
               break;
-            case "Lady":
-              this.station.Lady = this.station.availableBikes.filter(b => b.bikeType == BikeType[type]).length;
+            case 'Lady':
+              this.station.Lady = this.station.availableBikes.filter(
+                (b) => b.bikeType == BikeType[type]
+              ).length;
               break;
             default:
               break;
           }
         }
         //console.log(this.station);
-      }, error => {
+      },
+      (error) => {
         console.log(error);
       }
-    )
+    );
   }
 
   editStation() {
     this.stationService.editStation(this.station).subscribe(
-      res => {
+      (res) => {
         this.getStationList(this.pageNum, this.pageSize);
-      }, error => {
+      },
+      (error) => {
         console.log(error);
       }
-    )
+    );
   }
 
   deleteStation() {
     this.stationService.deleteStation(this.station.id).subscribe(
-      res => {
+      (res) => {
         //console.log(res);
-        this.dashboardService.updateDashboard()
-          .catch(error => console.log(error));
+        this.dashboardService
+          .updateDashboard()
+          .catch((error) => console.log(error));
         this.getStationList(this.pageNum, this.pageSize);
-      }, error => {
+      },
+      (error) => {
         console.log(error);
       }
-    )
+    );
   }
 
   addMarker(lat, lng) {

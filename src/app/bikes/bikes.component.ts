@@ -8,21 +8,22 @@ import { DashboardService } from '../_services/dashboard.service';
 @Component({
   selector: 'app-bikes',
   templateUrl: './bikes.component.html',
-  styleUrls: ['./bikes.component.css']
+  styleUrls: ['./bikes.component.css'],
 })
-
 export class BikesComponent implements OnInit {
   bike: Bike;
   bikeList: Bike[];
   pageNum = 1;
-  pageSizeList = [20, 25, 30]
+  pageSizeList = [20, 25, 30];
   pageSize: number = this.pageSizeList[0];
   pagination: Pagination;
-  keyword: string = "";
-  pageLinkSize: number = 9;
+  keyword: string = '';
+  pageLinkSize: number = 6;
 
-  constructor(public bikeService: BikeService,
-    public dashboardService: DashboardService) { }
+  constructor(
+    public bikeService: BikeService,
+    public dashboardService: DashboardService
+  ) {}
 
   ngOnInit(): void {
     this.getBikeList(this.pageNum, this.pageSize, this.pageLinkSize);
@@ -32,48 +33,52 @@ export class BikesComponent implements OnInit {
     this.pageNum = pageNum;
     this.pageSize = pageSize;
 
-    this.bikeService.getBikes(pageNum, pageSize, this.keyword)
-      .subscribe((res: HttpResponse<Bike[]>) => {
+    this.bikeService.getBikes(pageNum, pageSize, this.keyword).subscribe(
+      (res: HttpResponse<Bike[]>) => {
         this.bikeList = res.body;
         this.bike = this.bikeList[0];
         this.pagination = Convert.toPagination(res.headers.get('x-pagination'));
         this.pagination = Convert.generatePageLinks(this.pagination);
-      }, error => {
+      },
+      (error) => {
         console.log(error);
-      });
+      }
+    );
   }
 
   getBike(id: number) {
     this.bikeService.getBike(id).subscribe(
       (res: Bike) => {
         this.bike = res;
-      }, error => {
+      },
+      (error) => {
         console.log(error);
       }
-    )
+    );
   }
 
   editBike() {
     this.bikeService.editBike(this.bike).subscribe(
-      res => {
+      (res) => {
         this.getBikeList(this.pageNum, this.pageSize, this.pageLinkSize);
-      }, error => {
+      },
+      (error) => {
         console.log(error);
-      }, () => {
+      },
+      () => {
         //console.log();
       }
-    )
+    );
   }
 
   deleteBike() {
     this.bikeService.deleteBike(this.bike.id).subscribe(
-      res => {
+      (res) => {
         console.log(res);
-      }, error => {
+      },
+      (error) => {
         console.log(error);
       }
-    )
+    );
   }
-
-
 }

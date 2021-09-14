@@ -26,8 +26,10 @@ export class Convert {
     return JSON.stringify(value);
   }
 
-  public static generatePageLinks(page: Pagination, pageLinkSize: number = 9): Pagination {
-
+  public static generatePageLinks(
+    page: Pagination,
+    pageLinkSize: number = 6
+  ): Pagination {
     let newPageLinkSize = Math.round(pageLinkSize / 2) - 1;
 
     if (page.totalPages <= pageLinkSize) {
@@ -35,15 +37,26 @@ export class Convert {
         page.pagelinks.push(i);
       }
     } else if (page.currentPage == 1) {
-      for (let i = 1; i <= (page.currentPage + pageLinkSize) - 1; i++) {
+      for (let i = 1; i <= page.currentPage + pageLinkSize - 1; i++) {
         page.pagelinks.push(i);
       }
-    } else if (page.currentPage + newPageLinkSize >= page.totalPages) {
-      for (let i = page.totalPages - pageLinkSize + 1; i <= page.totalPages; i++) {
+    } else if (page.currentPage >= page.totalPages - Math.round(pageLinkSize / 2)) {
+      for (
+        let i = page.totalPages - Math.round(pageLinkSize / 2) - 1;
+        i <= page.totalPages;
+        i++
+      ) {
         page.pagelinks.push(i);
       }
-    } else if (page.currentPage >= pageLinkSize && page.currentPage <= page.totalPages - 4) {
-      for (let i = page.currentPage - newPageLinkSize; i <= page.currentPage + newPageLinkSize; i++) {
+    } else if (
+      page.currentPage >= pageLinkSize &&
+      page.currentPage <= page.totalPages
+    ) {
+      for (
+        let i = page.currentPage - newPageLinkSize;
+        i <= page.currentPage + newPageLinkSize;
+        i++
+      ) {
         page.pagelinks.push(i);
       }
     } else {

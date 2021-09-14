@@ -1,43 +1,90 @@
-<app-dashboard [dashboard]="(dashboardService.dashboard$ | async)"></app-dashboard>
+<app-dashboard
+  [dashboard]="dashboardService.dashboard$ | async"
+></app-dashboard>
 
 <div *ngIf="pagination" class="row mt-5">
   <div class="col-sm-12 col-md-5">
-    <div *ngIf="pagination.currentPage *pagination.pageSize <= pagination.totalCount" class="dataTables_info"
-      id="bikes_info" role="status">
-      Showing {{(pagination.currentPage - 1) * pagination.pageSize + 1}} to {{pagination.currentPage *
-      pagination.pageSize}} of {{pagination.totalCount}} entries
+    <div
+      *ngIf="
+        pagination.currentPage * pagination.pageSize <= pagination.totalCount
+      "
+      class="dataTables_info"
+      id="bikes_info"
+      role="status"
+    >
+      Showing {{ (pagination.currentPage - 1) * pagination.pageSize + 1 }} to
+      {{ pagination.currentPage * pagination.pageSize }} of
+      {{ pagination.totalCount }} entries
     </div>
-    <div *ngIf="pagination.currentPage *pagination.pageSize > pagination.totalCount" class="dataTables_info"
-      id="bikes_info" role="status">
-      Showing {{(pagination.currentPage - 1) * pagination.pageSize + 1}} to {{pagination.totalCount}} of
-      {{pagination.totalCount}} entries
+    <div
+      *ngIf="
+        pagination.currentPage * pagination.pageSize > pagination.totalCount
+      "
+      class="dataTables_info"
+      id="bikes_info"
+      role="status"
+    >
+      Showing {{ (pagination.currentPage - 1) * pagination.pageSize + 1 }} to
+      {{ pagination.totalCount }} of {{ pagination.totalCount }} entries
     </div>
   </div>
   <div class="col-sm-12 col-md-7 d-flex justify-content-end">
     <ul class="pagination">
-      <li class="paginate_button page-item previous" [ngClass]="{'disabled': !pagination.previousPageLink}"
-        id="bikes_previous">
-        <a class="page-link" role="button" (click)="getBikeList(pagination.currentPage-1,pageSize,pageLinkSize)"><span
-            class="material-icons">
-            navigate_before
-          </span></a>
+      <li
+        class="paginate_button page-item previous"
+        [ngClass]="{ disabled: !pagination.previousPageLink }"
+        id="bikes_previous"
+      >
+        <a
+          class="page-link"
+          role="button"
+          (click)="
+            getBikeList(pagination.currentPage - 1, pageSize, pageLinkSize)
+          "
+          ><span class="material-icons"> navigate_before </span></a
+        >
       </li>
-      <li *ngIf="pagination.currentPage > pagination.pagelinks.length" class="paginate_button page-item disabled">
+      <li
+        *ngIf="pagination.currentPage >= pagination.pagelinks.length"
+        class="paginate_button page-item disabled"
+      >
         <a class="page-link">...</a>
       </li>
-      <li *ngFor="let p of pagination.pagelinks;" class="paginate_button page-item"
-        [ngClass]="{'active': pagination.currentPage == p}">
-        <a class="page-link" role="button" (click)="getBikeList(p, pageSize,pageLinkSize)">{{p}}</a>
+      <li
+        *ngFor="let p of pagination.pagelinks"
+        class="paginate_button page-item"
+        [ngClass]="{ active: pagination.currentPage == p }"
+      >
+        <a
+          class="page-link"
+          role="button"
+          (click)="getBikeList(p, pageSize, pageLinkSize)"
+          >{{ p }}</a
+        >
       </li>
-      <li *ngIf="pagination.currentPage <= (pagination.totalPages - pagination.pagelinks.length) + 1
-        && pagination.totalPages > pageLinkSize" class="paginate_button page-item disabled">
+      <li
+        *ngIf="
+          pagination.currentPage <=
+            pagination.totalPages - pageLinkSize / 2 - 1 &&
+          pagination.totalPages > pageLinkSize
+        "
+        class="paginate_button page-item disabled"
+      >
         <a class="page-link">...</a>
       </li>
-      <li class="paginate_button page-item next" [ngClass]="{'disabled': !pagination.nextPageLink}" id="bikes_next">
-        <a class="page-link" role="button" (click)="getBikeList(pagination.currentPage+1,pageSize,pageLinkSize)"><span
-            class="material-icons">
-            navigate_next
-          </span></a>
+      <li
+        class="paginate_button page-item next"
+        [ngClass]="{ disabled: !pagination.nextPageLink }"
+        id="bikes_next"
+      >
+        <a
+          class="page-link"
+          role="button"
+          (click)="
+            getBikeList(pagination.currentPage + 1, pageSize, pageLinkSize)
+          "
+          ><span class="material-icons"> navigate_next </span></a
+        >
       </li>
     </ul>
   </div>
@@ -47,57 +94,134 @@
   <div class="col-sm-12 col-md-6 d-flex">
     <div class="dataTables_length d-flex" id="bikes_length">
       <label>Show</label>
-      <select [(ngModel)]="pageSize" (change)="getBikeList(pageNum, pageSize,pageLinkSize)"
-        class="form-select form-select-sm mx-2 h-100">
-        <option *ngFor="let size of pageSizeList" [value]="size">{{size}}</option>
+      <select
+        [(ngModel)]="pageSize"
+        (change)="getBikeList(pageNum, pageSize, pageLinkSize)"
+        class="form-select form-select-sm mx-2 h-100"
+      >
+        <option *ngFor="let size of pageSizeList" [value]="size">
+          {{ size }}
+        </option>
       </select>
       <label>entries</label>
     </div>
   </div>
   <div class="col-sm-12 col-md-6 d-flex">
     <div id="bike_filter" class="dataTables_filter">
-      <span class="d-flex">Search:
-        <input [(ngModel)]="keyword" (keyup.enter)="getBikeList(pageNum, pageSize,pageLinkSize)" type="search"
-          class="form-control form-control-sm ms-2" placeholder="">
+      <span class="d-flex"
+        >Search:
+        <input
+          [(ngModel)]="keyword"
+          (keyup.enter)="getBikeList(pageNum, pageSize, pageLinkSize)"
+          type="search"
+          class="form-control form-control-sm ms-2"
+          placeholder=""
+        />
       </span>
     </div>
   </div>
 </div>
 
 <div class="col-sm-12">
-  <table id="tableOfBikes" class="table table-striped dataTable" style="width: 100%;" role="grid"
-    aria-describedby="tableOfBikes_info">
+  <table
+    id="tableOfBikes"
+    class="table table-striped dataTable"
+    style="width: 100%"
+    role="grid"
+    aria-describedby="tableOfBikes_info"
+  >
     <thead>
       <tr role="row">
-        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 10%;">ID</th>
-        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 10%;">類型</th>
-        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 10%;">里程</th>
-        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 10%;">收益</th>
-        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 30%;">站名</th>
-        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 10%;">狀態</th>
-        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 10%;">編輯</th>
+        <th
+          class="sorting"
+          tabindex="0"
+          rowspan="1"
+          colspan="1"
+          style="width: 10%"
+        >
+          ID
+        </th>
+        <th
+          class="sorting"
+          tabindex="0"
+          rowspan="1"
+          colspan="1"
+          style="width: 10%"
+        >
+          類型
+        </th>
+        <th
+          class="sorting"
+          tabindex="0"
+          rowspan="1"
+          colspan="1"
+          style="width: 10%"
+        >
+          里程
+        </th>
+        <th
+          class="sorting"
+          tabindex="0"
+          rowspan="1"
+          colspan="1"
+          style="width: 10%"
+        >
+          收益
+        </th>
+        <th
+          class="sorting"
+          tabindex="0"
+          rowspan="1"
+          colspan="1"
+          style="width: 30%"
+        >
+          站名
+        </th>
+        <th
+          class="sorting"
+          tabindex="0"
+          rowspan="1"
+          colspan="1"
+          style="width: 10%"
+        >
+          狀態
+        </th>
+        <th
+          class="sorting"
+          tabindex="0"
+          rowspan="1"
+          colspan="1"
+          style="width: 10%"
+        >
+          編輯
+        </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let bike of bikeList; let i = index" [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
-        <td class="">{{bike.id}}</td>
-        <td class="">{{bike.bikeType}}</td>
-        <td class="">{{bike.mileage}}</td>
-        <td class="">{{bike.revenue}}</td>
+      <tr
+        *ngFor="let bike of bikeList; let i = index"
+        [ngClass]="{ even: i % 2 == 0, odd: i % 2 == 1 }"
+      >
+        <td class="">{{ bike.id }}</td>
+        <td class="">{{ bike.bikeType }}</td>
+        <td class="">{{ bike.mileage }}</td>
+        <td class="">{{ bike.revenue }}</td>
         <ng-container *ngIf="bike.bikeStation == null">
-          <td class=""> </td>
+          <td class=""></td>
         </ng-container>
         <ng-container *ngIf="bike.bikeStation != null">
-          <td class="">{{bike.bikeStation.stationName}}</td>
+          <td class="">{{ bike.bikeStation.stationName }}</td>
         </ng-container>
         <td *ngIf="bike.rented" class="">使用中</td>
         <td *ngIf="!bike.rented" class="">閒置中</td>
         <td class="sorting_1">
-          <button class="btn btn-secondary btn-edit" (click)="getBike(bike.id)" data-bs-toggle="modal"
-            data-bs-target="#bikeModal">
-            <span class="material-icons">
-              mode_edit_outline
-            </span>
+          <button
+            class="btn btn-secondary btn-edit"
+            (click)="getBike(bike.id)"
+            data-bs-toggle="modal"
+            data-bs-target="#bikeModal"
+          >
+            <span class="material-icons"> mode_edit_outline </span>
           </button>
         </td>
       </tr>
@@ -116,77 +240,138 @@
 </div>
 
 <ng-container *ngIf="bike">
-
   <div class="modal fade" id="bikeModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-
-        <form #bikeForm="ngForm" class="modal-body p-md-3 border rounded-3 bg-light text-dark" autocomplete="off">
+        <form
+          #bikeForm="ngForm"
+          class="modal-body p-md-3 border rounded-3 bg-light text-dark"
+          autocomplete="off"
+        >
           <div class="d-flex justify-content-between mb-3">
-            <button type="button" class="btn-close" style="visibility:hidden"></button>
+            <button
+              type="button"
+              class="btn-close"
+              style="visibility: hidden"
+            ></button>
             <h2 class="modal-title">Bike</h2>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="row mb-3">
             <div class="col-3">
               <div class="form-floating">
-                <input name="id" type="number" class="form-control" [value]="bike.id" readonly>
+                <input
+                  name="id"
+                  type="number"
+                  class="form-control"
+                  [value]="bike.id"
+                  readonly
+                />
                 <label>編號</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-floating">
-                <input name="id" type="text" class="form-control" [value]="bike.bikeType" readonly>
+                <input
+                  name="id"
+                  type="text"
+                  class="form-control"
+                  [value]="bike.bikeType"
+                  readonly
+                />
                 <label>車型</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-floating">
-                <input name="mileage" type="number" class="form-control" [value]="bike.mileage"
-                  [(ngModel)]="bike.mileage" required>
+                <input
+                  name="mileage"
+                  type="number"
+                  class="form-control"
+                  [value]="bike.mileage"
+                  [(ngModel)]="bike.mileage"
+                  required
+                />
                 <label>里程</label>
               </div>
             </div>
             <div class="col-3">
               <div class="form-floating">
-                <input name="revenue" type="number" class="form-control" [value]="bike.revenue"
-                  [(ngModel)]="bike.revenue" required>
+                <input
+                  name="revenue"
+                  type="number"
+                  class="form-control"
+                  [value]="bike.revenue"
+                  [(ngModel)]="bike.revenue"
+                  required
+                />
                 <label>收益</label>
               </div>
             </div>
           </div>
           <div class="form-floating mb-3">
-            <input name="stationName" type="text" class="form-control" [value]="bike.bikeStation?.stationName" readonly>
+            <input
+              name="stationName"
+              type="text"
+              class="form-control"
+              [value]="bike.bikeStation?.stationName"
+              readonly
+            />
             <label>站名</label>
           </div>
 
           <div class="d-flex align-items-center justify-content-between">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="rented" id="radio1" [value]="true"
-                [checked]="bike.rented == true" [(ngModel)]="bike.rented">
-              <label class="form-check-label" for="radio1">
-                租借中
-              </label>
+              <input
+                class="form-check-input"
+                type="radio"
+                name="rented"
+                id="radio1"
+                [value]="true"
+                [checked]="bike.rented == true"
+                [(ngModel)]="bike.rented"
+              />
+              <label class="form-check-label" for="radio1"> 租借中 </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="rented" id="radio2" [value]="false"
-                [checked]="bike.rented == false" [(ngModel)]="bike.rented">
-              <label class="form-check-label" for="radio2">
-                閒置中
-              </label>
+              <input
+                class="form-check-input"
+                type="radio"
+                name="rented"
+                id="radio2"
+                [value]="false"
+                [checked]="bike.rented == false"
+                [(ngModel)]="bike.rented"
+              />
+              <label class="form-check-label" for="radio2"> 閒置中 </label>
             </div>
             <div>
-              <button class="btn btn-success btn-in-modal" type="submit" data-bs-dismiss="modal"
-                (click)="editBike()">修改</button>
+              <button
+                class="btn btn-success btn-in-modal"
+                type="submit"
+                data-bs-dismiss="modal"
+                (click)="editBike()"
+              >
+                修改
+              </button>
             </div>
             <div>
-              <button class="btn btn-danger btn-in-modal" type="submit" data-bs-dismiss="modal"
-                (click)="deleteBike()">刪除</button>
+              <button
+                class="btn btn-danger btn-in-modal"
+                type="submit"
+                data-bs-dismiss="modal"
+                (click)="deleteBike()"
+              >
+                刪除
+              </button>
             </div>
           </div>
         </form>
       </div>
     </div>
   </div>
-
 </ng-container>

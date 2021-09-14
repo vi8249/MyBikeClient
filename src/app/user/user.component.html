@@ -5,33 +5,55 @@
     <!-- end row -->
     <div class="row">
       <div class="col-3">
-        <div style="visibility:hidden">
+        <div style="visibility: hidden">
           <h1>s</h1>
         </div>
         <div class="text-center card-box">
           <div class="member-card pt-2 pb-2">
-            <div class="thumb-lg member-thumb mx-auto"><img src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                class="rounded-circle img-thumbnail w-50" alt="profile-image"></div>
+            <div class="thumb-lg member-thumb mx-auto">
+              <img
+                src="https://bootdey.com/img/Content/avatar/avatar2.png"
+                class="rounded-circle img-thumbnail w-50"
+                alt="profile-image"
+              />
+            </div>
             <div class="">
-              <h4>{{user.email}}</h4>
+              <h4>{{ user.email }}</h4>
             </div>
 
             <div class="row">
               <div class="user-btn d-flex">
-                <button type="button" class="btn btn-warning btn-rounded" data-bs-toggle="modal"
-                  data-bs-target="#rentModal" [ngClass]="{'disabled':user.bike != null}" (click)="
-                getStationList(1, pageSize)">租車
+                <button
+                  type="button"
+                  class="btn btn-warning btn-rounded"
+                  data-bs-toggle="modal"
+                  data-bs-target="#rentModal"
+                  [ngClass]="{ disabled: user.bike != null }"
+                  (click)="getStationList(1, pageSize)"
+                >
+                  租車
                 </button>
               </div>
               <div class="user-btn d-flex">
-                <button type=" button" class="btn btn-warning btn-rounded" data-bs-toggle="modal"
-                  data-bs-target="#returnModal" [ngClass]="{'disabled':user.bike == null}"
-                  (click)="getStationList(1, pageSize)">還車
+                <button
+                  type=" button"
+                  class="btn btn-warning btn-rounded"
+                  data-bs-toggle="modal"
+                  data-bs-target="#returnModal"
+                  [ngClass]="{ disabled: user.bike == null }"
+                  (click)="getStationList(1, pageSize)"
+                >
+                  還車
                 </button>
               </div>
               <div class="user-btn d-flex">
-                <button type="button" class="btn btn-success btn-rounded" data-bs-toggle="modal"
-                  data-bs-target="#addModal">加值
+                <button
+                  type="button"
+                  class="btn btn-success btn-rounded"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addModal"
+                >
+                  加值
                 </button>
               </div>
             </div>
@@ -41,79 +63,115 @@
                 <div class="col-1"></div>
                 <div class="col-4">
                   <div class="mt-3">
-                    <h4>${{user.money}}</h4>
+                    <h4>${{ user.money }}</h4>
                     <p class="mb-0 text-muted">錢包</p>
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="mt-3">
-                    <h4>{{user.usage}}</h4>
+                    <h4>{{ user.usage }}</h4>
                     <p class="mb-0 text-muted">使用次數</p>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
 
       <div class="col-9">
-
         <div class="d-flex justify-content-end">
           <ul class="pagination">
-            <li class="paginate_button page-item previous" [ngClass]="{'disabled': !historyPages.previousPageLink}"
-              id="stations_previous">
-              <a class="page-link" role="button" (click)="getHistoryRoutes(historyPages.currentPage-1, pageSize)">
-                <span class="material-icons">
-                  navigate_before
-                </span>
+            <li
+              class="paginate_button page-item previous"
+              [ngClass]="{ disabled: !historyPages.previousPageLink }"
+              id="stations_previous"
+            >
+              <a
+                class="page-link"
+                role="button"
+                (click)="
+                  getHistoryRoutes(historyPages.currentPage - 1, pageSize)
+                "
+              >
+                <span class="material-icons"> navigate_before </span>
               </a>
             </li>
-            <li *ngIf="historyPages.currentPage > historyPages.pagelinks.length"
-              class="paginate_button page-item disabled">
+            <li
+              *ngIf="historyPages.currentPage >= historyPages.pagelinks.length"
+              class="paginate_button page-item disabled"
+            >
               <a class="page-link">...</a>
             </li>
-            <li *ngFor="let p of historyPages.pagelinks;" class="paginate_button page-item"
-              [ngClass]="{'active': historyPages.currentPage == p}">
-              <a class="page-link" role="button" (click)="getHistoryRoutes(p, pageSize)">{{p}}</a>
+            <li
+              *ngFor="let p of historyPages.pagelinks"
+              class="paginate_button page-item"
+              [ngClass]="{ active: historyPages.currentPage == p }"
+            >
+              <a
+                class="page-link"
+                role="button"
+                (click)="getHistoryRoutes(p, pageSize)"
+                >{{ p }}</a
+              >
             </li>
-            <li *ngIf="historyPages.currentPage <= (historyPages.totalPages - historyPages.pagelinks.length) + 1
-                && historyPages.totalPages > pageLinkSize" class="paginate_button page-item disabled">
+            <li
+              *ngIf="
+                historyPages.currentPage <=
+                  historyPages.totalPages - historyPages.pagelinks.length + 1 &&
+                historyPages.totalPages > pageLinkSize
+              "
+              class="paginate_button page-item disabled"
+            >
               <a class="page-link">...</a>
             </li>
-            <li class="paginate_button page-item next" [ngClass]="{'disabled': !historyPages.nextPageLink}"
-              id="stations_next">
-              <a class="page-link" role="button" (click)="getHistoryRoutes(historyPages.currentPage+1,pageSize)">
-                <span class="material-icons">
-                  navigate_next
-                </span></a>
+            <li
+              class="paginate_button page-item next"
+              [ngClass]="{ disabled: !historyPages.nextPageLink }"
+              id="stations_next"
+            >
+              <a
+                class="page-link"
+                role="button"
+                (click)="
+                  getHistoryRoutes(historyPages.currentPage + 1, pageSize)
+                "
+              >
+                <span class="material-icons"> navigate_next </span></a
+              >
             </li>
           </ul>
         </div>
 
-        <table id="tableOfstations" class="table table-striped dataTable" style="width: 100%;" role="grid"
-          aria-describedby="tableOfstations_info">
+        <table
+          id="tableOfstations"
+          class="table table-striped dataTable"
+          style="width: 100%"
+          role="grid"
+          aria-describedby="tableOfstations_info"
+        >
           <thead>
             <tr role="row">
-              <th rowspan="1" colspan="1" style="width: 10%;">單車NO.</th>
-              <th rowspan="1" colspan="1" style="width: 20%;">借出站</th>
-              <th rowspan="1" colspan="1" style="width: 20%;">歸還站</th>
-              <th rowspan="1" colspan="1" style="width: 10%;">借出時間</th>
-              <th rowspan="1" colspan="1" style="width: 10%;">歸還時間</th>
-              <th rowspan="1" colspan="1" style="width: 10%;">費用</th>
+              <th rowspan="1" colspan="1" style="width: 10%">單車NO.</th>
+              <th rowspan="1" colspan="1" style="width: 20%">借出站</th>
+              <th rowspan="1" colspan="1" style="width: 20%">歸還站</th>
+              <th rowspan="1" colspan="1" style="width: 10%">借出時間</th>
+              <th rowspan="1" colspan="1" style="width: 10%">歸還時間</th>
+              <th rowspan="1" colspan="1" style="width: 10%">費用</th>
             </tr>
           </thead>
           <tbody>
             <ng-container *ngIf="user.historyRoute">
-              <tr *ngFor="let route of user.historyRoute; let i = index"
-                [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
-                <td class="">{{route.bikeId}}</td>
-                <td class="">{{route.sourceName}}</td>
-                <td class="">{{route.destinationName}}</td>
-                <td class="">{{route.borrowTime | date:'short':'+1600'}}</td>
-                <td class="">{{route.returnTime | date:'short':'+1600'}}</td>
-                <td class="">{{route.cost}}</td>
+              <tr
+                *ngFor="let route of user.historyRoute; let i = index"
+                [ngClass]="{ even: i % 2 == 0, odd: i % 2 == 1 }"
+              >
+                <td class="">{{ route.bikeId }}</td>
+                <td class="">{{ route.sourceName }}</td>
+                <td class="">{{ route.destinationName }}</td>
+                <td class="">{{ route.borrowTime | date: "short":"+1600" }}</td>
+                <td class="">{{ route.returnTime | date: "short":"+1600" }}</td>
+                <td class="">{{ route.cost }}</td>
               </tr>
             </ng-container>
             <ng-container *ngIf="user.historyRoute == null">
@@ -126,21 +184,17 @@
                 <td>-</td>
               </tr>
             </ng-container>
-
           </tbody>
-          <tfoot>
-          </tfoot>
+          <tfoot></tfoot>
         </table>
       </div>
-
     </div>
 
     <div class="divider div-transparent div-dot"></div>
     <!-- end col -->
     <div class="row mt-5">
       <app-price></app-price>
-      <h2 style="visibility: hidden;">1</h2>
-
+      <h2 style="visibility: hidden">1</h2>
     </div>
   </div>
   <!-- container -->
@@ -148,238 +202,401 @@
 
 <!-- modal -->
 <ng-container *ngIf="stationList">
-
   <div class="modal fade" id="rentModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-
         <div class="modal-body p-md-3 border rounded-3 bg-light text-dark">
           <div class="d-flex justify-content-between mb-3">
-            <button type="button" class="btn-close" style="visibility:hidden"></button>
+            <button
+              type="button"
+              class="btn-close"
+              style="visibility: hidden"
+            ></button>
             <h2 class="modal-title"></h2>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="row mb-3">
-
             <div class="col-12 text-center">
               <h3>租車</h3>
               <div id="station_filter" class="dataTables_filter my-2">
                 <form #searchRentForm="ngForm" autocomplete="off">
                   <div class="form-floating">
-
-                    <input name="keyword" [(ngModel)]="keyword" (keyup.enter)="getStationList(1, pageSize)" type="text"
-                      class="form-control w-100" placeholder="臺中">
+                    <input
+                      name="keyword"
+                      [(ngModel)]="keyword"
+                      (keyup.enter)="getStationList(1, pageSize)"
+                      type="text"
+                      class="form-control w-100"
+                      placeholder="臺中"
+                    />
                     <label for="">Search</label>
-
                   </div>
                 </form>
               </div>
 
               <div class="col-sm-12 col-md-7 d-flex justify-content-start">
                 <ul class="pagination">
-                  <li class="paginate_button page-item previous"
-                    [ngClass]="{'disabled': stationPages.previousPageLink == null}">
-                    <a class="page-link" role="button" (click)="getStationList(stationPages.currentPage-1,pageSize)">
-                      <span class="material-icons">
-                        navigate_before
-                      </span>
+                  <li
+                    class="paginate_button page-item previous"
+                    [ngClass]="{
+                      disabled: stationPages.previousPageLink == null
+                    }"
+                  >
+                    <a
+                      class="page-link"
+                      role="button"
+                      (click)="
+                        getStationList(stationPages.currentPage - 1, pageSize)
+                      "
+                    >
+                      <span class="material-icons"> navigate_before </span>
                     </a>
                   </li>
-                  <li *ngIf="stationPages.currentPage >= stationPages.pagelinks.length && stationPages.currentPage!=1"
-                    class="paginate_button page-item disabled">
+                  <li
+                    *ngIf="
+                      stationPages.currentPage >=
+                        stationPages.pagelinks.length &&
+                      stationPages.currentPage != 1
+                    "
+                    class="paginate_button page-item disabled"
+                  >
                     <a class="page-link">...</a>
                   </li>
-                  <li *ngFor="let p of stationPages.pagelinks;" class="paginate_button page-item"
-                    [ngClass]="{'active': stationPages.currentPage == p}">
-                    <a class="page-link" role="button" (click)="getStationList(p, pageSize)">{{p}}</a>
+                  <li
+                    *ngFor="let p of stationPages.pagelinks"
+                    class="paginate_button page-item"
+                    [ngClass]="{ active: stationPages.currentPage == p }"
+                  >
+                    <a
+                      class="page-link"
+                      role="button"
+                      (click)="getStationList(p, pageSize)"
+                      >{{ p }}</a
+                    >
                   </li>
-                  <li *ngIf="stationPages.currentPage <= (stationPages.totalPages - stationPages.pagelinks.length) + 1
-                      && stationPages.totalPages > pageLinkSize" class="paginate_button page-item disabled">
+                  <li
+                    *ngIf="
+                      stationPages.currentPage <=
+                        stationPages.totalPages -
+                          stationPages.pagelinks.length +
+                          1 && stationPages.totalPages > pageLinkSize
+                    "
+                    class="paginate_button page-item disabled"
+                  >
                     <a class="page-link">...</a>
                   </li>
 
-                  <li class="paginate_button page-item next"
-                    [ngClass]="{'disabled': stationPages.nextPageLink == null}">
-                    <a class="page-link" role="button" (click)="getStationList(stationPages.currentPage+1,pageSize)">
-                      <span class="material-icons">
-                        navigate_next
-                      </span></a>
+                  <li
+                    class="paginate_button page-item next"
+                    [ngClass]="{ disabled: stationPages.nextPageLink == null }"
+                  >
+                    <a
+                      class="page-link"
+                      role="button"
+                      (click)="
+                        getStationList(stationPages.currentPage + 1, pageSize)
+                      "
+                    >
+                      <span class="material-icons"> navigate_next </span></a
+                    >
                   </li>
                 </ul>
               </div>
 
               <div class="col-sm-12">
                 <form [formGroup]="rentForm" (ngSubmit)="rentBike()">
-                  <table class="table table-striped dataTable" style="width: 100%;" role="grid">
+                  <table
+                    class="table table-striped dataTable"
+                    style="width: 100%"
+                    role="grid"
+                  >
                     <thead>
                       <tr role="row">
-                        <th rowspan="1" colspan="1" style="width: 10%;"></th>
-                        <th rowspan="1" colspan="1" style="width: 20%;">站名</th>
-                        <th rowspan="1" colspan="1" style="width: 10%;">車型</th>
+                        <th rowspan="1" colspan="1" style="width: 10%"></th>
+                        <th rowspan="1" colspan="1" style="width: 20%">站名</th>
+                        <th rowspan="1" colspan="1" style="width: 10%">車型</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="tRow" *ngFor="let station of stationList; let i = index"
-                        (click)="changeStation(station, $event)" [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
+                      <tr
+                        class="tRow"
+                        *ngFor="let station of stationList; let i = index"
+                        (click)="changeStation(station, $event)"
+                        [ngClass]="{ even: i % 2 == 0, odd: i % 2 == 1 }"
+                      >
                         <td class="">
-                          <input type="radio" formControlName="stationId" [id]="'rentId'+ i" [value]="station.id">
+                          <input
+                            type="radio"
+                            formControlName="stationId"
+                            [id]="'rentId' + i"
+                            [value]="station.id"
+                          />
                         </td>
-                        <td class=""><label [for]="'rentId'+ i">{{station.stationName}}</label></td>
                         <td class="">
-                          <select class="form-select" formControlName="{{station.id + '_bike'}}">
+                          <label [for]="'rentId' + i">{{
+                            station.stationName
+                          }}</label>
+                        </td>
+                        <td class="">
+                          <select
+                            class="form-select"
+                            formControlName="{{ station.id + '_bike' }}"
+                          >
                             <option disabled value="null">選擇</option>
-                            <option *ngFor="let b of station.availableBikes" [value]="b.id">
-                              {{b.bikeType}}
+                            <option
+                              *ngFor="let b of station.availableBikes"
+                              [value]="b.id"
+                            >
+                              {{ b.bikeType }}
                             </option>
                           </select>
                         </td>
                       </tr>
                     </tbody>
-                    <tfoot>
-                    </tfoot>
+                    <tfoot></tfoot>
                   </table>
-                  <div id="station_map" *ngIf="apiLoaded && stationList.length>0">
-                    <app-map [center]="center" [markers]="markers" [zoom]="zoom"></app-map>
+                  <div
+                    id="station_map"
+                    *ngIf="apiLoaded && stationList.length > 0"
+                  >
+                    <app-map
+                      [center]="center"
+                      [markers]="markers"
+                      [zoom]="zoom"
+                    ></app-map>
                   </div>
-                  <button type="submit" class="btn btn-warning w-100" [ngClass]="{'disabled': rentForm.get('stationId').value ==null ||
-                    rentForm.get(rentForm.controls['stationId'].value + '_bike').value == null}"
-                    data-bs-dismiss="modal">送出</button>
+                  <button
+                    type="submit"
+                    class="btn btn-warning w-100"
+                    [ngClass]="{
+                      disabled:
+                        rentForm.get('stationId').value == null ||
+                        rentForm.get(
+                          rentForm.controls['stationId'].value + '_bike'
+                        ).value == null
+                    }"
+                    data-bs-dismiss="modal"
+                  >
+                    送出
+                  </button>
                 </form>
               </div>
-
             </div>
-
           </div>
-
         </div>
       </div>
     </div>
   </div>
-
 </ng-container>
 
 <!-- modal -->
 <ng-container *ngIf="stationList">
-
   <div class="modal fade" id="returnModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body p-md-3 border rounded-3 bg-light text-dark">
           <div class="d-flex justify-content-between mb-3">
-            <button type="button" class="btn-close" style="visibility:hidden"></button>
+            <button
+              type="button"
+              class="btn-close"
+              style="visibility: hidden"
+            ></button>
             <h2 class="modal-title"></h2>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="row mb-3">
-
             <div class="col-12 text-center">
               <h3>還車</h3>
               <div id="station_filter" class="dataTables_filter my-2">
                 <form #searchReturnForm="ngForm" autocomplete="off">
                   <div class="form-floating">
-
-                    <input name="keyword" [(ngModel)]="keyword" (keyup.enter)="getStationList(1, pageSize)" type="text"
-                      class="form-control w-100" placeholder="臺中">
+                    <input
+                      name="keyword"
+                      [(ngModel)]="keyword"
+                      (keyup.enter)="getStationList(1, pageSize)"
+                      type="text"
+                      class="form-control w-100"
+                      placeholder="臺中"
+                    />
                     <label for="">Search</label>
-
                   </div>
                 </form>
               </div>
 
               <div class="col-sm-12 col-md-7 d-flex justify-content-start">
                 <ul class="pagination">
-                  <li class="paginate_button page-item previous"
-                    [ngClass]="{'disabled': !stationPages.previousPageLink}">
-                    <a class="page-link" role="button" (click)="getStationList(stationPages.currentPage-1,pageSize)">
-                      <span class="material-icons">
-                        navigate_before
-                      </span>
+                  <li
+                    class="paginate_button page-item previous"
+                    [ngClass]="{ disabled: !stationPages.previousPageLink }"
+                  >
+                    <a
+                      class="page-link"
+                      role="button"
+                      (click)="
+                        getStationList(stationPages.currentPage - 1, pageSize)
+                      "
+                    >
+                      <span class="material-icons"> navigate_before </span>
                     </a>
                   </li>
-                  <li *ngIf="stationPages.currentPage >= stationPages.pagelinks.length && stationPages.currentPage!=1"
-                    class="paginate_button page-item disabled">
+                  <li
+                    *ngIf="
+                      stationPages.currentPage >=
+                        stationPages.pagelinks.length &&
+                      stationPages.currentPage != 1
+                    "
+                    class="paginate_button page-item disabled"
+                  >
                     <a class="page-link">...</a>
                   </li>
-                  <li *ngFor="let p of stationPages.pagelinks;" class="paginate_button page-item"
-                    [ngClass]="{'active': stationPages.currentPage == p}">
-                    <a class="page-link" role="button" (click)="getStationList(p, pageSize)">{{p}}</a>
+                  <li
+                    *ngFor="let p of stationPages.pagelinks"
+                    class="paginate_button page-item"
+                    [ngClass]="{ active: stationPages.currentPage == p }"
+                  >
+                    <a
+                      class="page-link"
+                      role="button"
+                      (click)="getStationList(p, pageSize)"
+                      >{{ p }}</a
+                    >
                   </li>
-                  <li *ngIf="stationPages.currentPage <= (stationPages.totalPages - stationPages.pagelinks.length) + 1
-                      && stationPages.totalPages > pageLinkSize" class="paginate_button page-item disabled">
+                  <li
+                    *ngIf="
+                      stationPages.currentPage <=
+                        stationPages.totalPages -
+                          stationPages.pagelinks.length +
+                          1 && stationPages.totalPages > pageLinkSize
+                    "
+                    class="paginate_button page-item disabled"
+                  >
                     <a class="page-link">...</a>
                   </li>
-                  <li class="paginate_button page-item next" [ngClass]="{'disabled': !stationPages.nextPageLink}">
-                    <a class="page-link" role="button" (click)="getStationList(stationPages.currentPage+1,pageSize)">
-                      <span class="material-icons">
-                        navigate_next
-                      </span></a>
+                  <li
+                    class="paginate_button page-item next"
+                    [ngClass]="{ disabled: !stationPages.nextPageLink }"
+                  >
+                    <a
+                      class="page-link"
+                      role="button"
+                      (click)="
+                        getStationList(stationPages.currentPage + 1, pageSize)
+                      "
+                    >
+                      <span class="material-icons"> navigate_next </span></a
+                    >
                   </li>
                 </ul>
               </div>
 
               <div class="col-sm-12">
                 <form [formGroup]="returnForm" (ngSubmit)="returnBike()">
-                  <table class="table table-striped dataTable" style="width: 100%;" role="grid">
+                  <table
+                    class="table table-striped dataTable"
+                    style="width: 100%"
+                    role="grid"
+                  >
                     <thead>
                       <tr role="row">
-                        <th rowspan="1" colspan="1" style="width: 10%;"></th>
-                        <th rowspan="1" colspan="1" style="width: 20%;">站名</th>
+                        <th rowspan="1" colspan="1" style="width: 10%"></th>
+                        <th rowspan="1" colspan="1" style="width: 20%">站名</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="tRow" *ngFor="let station of stationList; let i = index"
-                        (click)="changeReturnStation(station)" [ngClass]="{'even':i % 2 == 0, 'odd': i % 2 == 1}">
-
+                      <tr
+                        class="tRow"
+                        *ngFor="let station of stationList; let i = index"
+                        (click)="changeReturnStation(station)"
+                        [ngClass]="{ even: i % 2 == 0, odd: i % 2 == 1 }"
+                      >
                         <td class="">
-                          <input type="radio" formControlName="stationId" [id]="'returnId'+ i" [value]="station.id">
+                          <input
+                            type="radio"
+                            formControlName="stationId"
+                            [id]="'returnId' + i"
+                            [value]="station.id"
+                          />
                         </td>
-                        <td class=""><label [for]="'returnId'+ i">{{station.stationName}}</label></td>
+                        <td class="">
+                          <label [for]="'returnId' + i">{{
+                            station.stationName
+                          }}</label>
+                        </td>
                       </tr>
                     </tbody>
-                    <tfoot>
-                    </tfoot>
+                    <tfoot></tfoot>
                   </table>
-                  <div id="station_map" *ngIf="apiLoaded && stationList.length>0">
-                    <app-map [center]="center" [markers]="markers" [zoom]="zoom"></app-map>
+                  <div
+                    id="station_map"
+                    *ngIf="apiLoaded && stationList.length > 0"
+                  >
+                    <app-map
+                      [center]="center"
+                      [markers]="markers"
+                      [zoom]="zoom"
+                    ></app-map>
                   </div>
-                  <button type="submit" class="btn btn-warning w-100"
-                    [ngClass]="{'disabled': returnForm.controls['stationId'].value == null}"
-                    data-bs-dismiss="modal">送出</button>
+                  <button
+                    type="submit"
+                    class="btn btn-warning w-100"
+                    [ngClass]="{
+                      disabled: returnForm.controls['stationId'].value == null
+                    }"
+                    data-bs-dismiss="modal"
+                  >
+                    送出
+                  </button>
                 </form>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </ng-container>
 
 <ng-container *ngIf="user">
-
   <div class="modal fade" id="addModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-
         <div class="modal-body p-md-3 border rounded-3 bg-light text-dark">
           <div class="d-flex justify-content-between mb-3">
-            <button type="button" class="btn-close" style="visibility:hidden"></button>
+            <button
+              type="button"
+              class="btn-close"
+              style="visibility: hidden"
+            ></button>
             <h2 class="modal-title"></h2>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="row mb-3">
-
             <div class="col-12 text-center">
               <form [formGroup]="addForm" (ngSubmit)="addValue()">
                 <h3>加值</h3>
                 <div class="form-floating">
-                  <input class="form-control my-2" type="number" formControlName="amount">
+                  <input
+                    class="form-control my-2"
+                    type="number"
+                    formControlName="amount"
+                  />
                   <label for="">輸入金額</label>
                 </div>
-                <button class="btn btn-warning w-100" data-bs-dismiss="modal">送出</button>
+                <button class="btn btn-warning w-100" data-bs-dismiss="modal">
+                  送出
+                </button>
               </form>
             </div>
           </div>
@@ -387,3 +604,4 @@
       </div>
     </div>
   </div>
+</ng-container>
